@@ -1,0 +1,13 @@
+public class Constants {
+	//public static final String CONSUMER_KEY = "409941945-IGPMPuEaMfDB78J5zxOJrD9ydB2XQYBT7lfGCtec";
+	//public static final String CONSUMER_SECRET = "0hxNJBer7BNSKXK9ied4FSvwe73kcd5v1HP7i1x2Trk";
+	public static final String CONSUMER_KEY = "XYBXnmNY9nXMsKyzqREHXg";
+	public static final String CONSUMER_SECRET= "pvfg17fTq9Po5bErvukth6ZIzobgoMAS7pQEolTDrv8";
+ 
+	public static final String REQUEST_URL = "https://api.twitter.com/oauth/request_token";
+	public static final String ACCESS_URL = "https://api.twitter.com/oauth/access_token";
+	public static final String AUTHORIZE_URL = "https://api.twitter.com/oauth/authorize";
+ 
+	final public static String CALLBACK_SCHEME = "x-oauthflow-twitter";
+	final public static String CALLBACK_URL = CALLBACK_SCHEME + "://callback";
+}

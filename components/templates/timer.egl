@@ -1,0 +1,36 @@
+[% out.setContentType('Java'); %]
+
+private final String TAG = getClass().getName();
+private Location lastLocation;
+
+[% for (c in component.layoutcomponents) { %]
+private [%= c.type %] [%= c %];
+[% } %]
+
+private void setup[%= component %]() { 
+	[% for (c in component.layoutcomponents) { %]
+    [%= c %] = ([%= c.type %]) findViewById(R.id.[%= c.layoutID %]);
+    [% } %]
+
+    Log.i(TAG, "setupTimer()");
+	new CountDownTimer([%= component.countdown %], 1000) {
+		@Override
+		public void onFinish() {
+			if (lastLocation != null) {
+				String lon = String.valueOf(lastLocation.getLongitude());
+				String lat = String.valueOf(lastLocation.getLatitude());
+				String msg = "Last known location: (" + lon + ", " + lat + ")";
+				Toast.makeText(getBaseContext(), msg, Toast.LENGTH_LONG).show();
+			} else {
+				Toast.makeText(getBaseContext(), "No location found.", Toast.LENGTH_LONG).show();
+			}
+			setup[%= component %]();
+		}
+
+		@Override
+		public void onTick(long millisUntilFinished) {
+			Toast.makeText(getBaseContext(), "Tick.", Toast.LENGTH_SHORT).show();
+		}
+		
+	}.start();
+}

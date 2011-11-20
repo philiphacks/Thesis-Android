@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+      package="[%= manifest.package %]"
+      android:versionCode="[%= manifest.versionCode %]"
+      android:versionName="[%= manifest.versionName %]">
+    <uses-sdk android:minSdkVersion="[%= manifest.sdk %]" />
+
+    [% if manifest.app_info.isDefined() { %]
+      <application android:icon="[%= manifest.app_info.icon %]" android:label="[%= manifest.app_info.label %]">
+        [% for (a in manifest.app_info.activities) { %]
+          <activity android:name="[%= a.name %]"
+                    android:label="[%= a.label %]">
+              <intent-filter>
+                  <action android:name="[%= a.intent.action %]" />
+                  <category android:name="[%= a.intent.category %]" />
+              </intent-filter>
+          </activity>
+        [% } %]
+
+      </application>
+    [% } %]
+
+    [% if (manifest.permissions.isDefined() and manifest.permissions.size() > 0) { %]
+      [% for (p in manifest.permissions) {
+        <uses-permission android:name="[%= p.name %]"/>
+      %]
+    [% } %]
+</manifest>

@@ -1,0 +1,37 @@
+
+Model Manifest {
+
+	Node ManifestDescription {
+		namespace		: String="http://schemas.android.com/apk/res/android";
+		package			: String;
+		versionCode		: String="1";
+		versionName		: String="1.0";
+		sdk				: String;
+		app_info		: AppInfo[1];
+		permissions		: Permission[*];
+	}
+
+	Node AppInfo {
+		icon 		: String="@drawable/icon";
+		label		: String="@string/app_name";
+
+		activities	: Activity[*];
+	}
+
+	// e.g. <uses-permission android:name="android.permission.SEND_SMS"/>
+	Node Permission {
+		name 	: String;
+	}
+
+	Node Activity {
+		name 	: String;
+		label 	: String="@string/app_name";
+		intent	: IntentFilter;
+	}
+
+	// http://developer.android.com/guide/topics/intents/intents-filters.html
+	Node IntentFilter {
+		action 		: String="android.intent.action.MAIN";
+		category	: String="android.intent.category.LAUNCHER";
+	}
+}

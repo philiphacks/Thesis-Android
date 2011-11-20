@@ -1,0 +1,14 @@
+load "Component"
+
+Component geoComponent imports Presentation {
+	
+	AndroidComponent Geo {
+		package = "be.pds.thesis.geo";
+		gencodetemplate = "geo.egl";
+		ctype = "geo";
+
+		callback : String;
+		action: Component@0;
+	}
+
+}

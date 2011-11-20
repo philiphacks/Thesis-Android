@@ -1,0 +1,29 @@
+load "Component"
+
+Component twitterComponent {
+	
+	AndroidComponent Twitter {
+		package = "be.pds.twitter";
+		gencodetemplate = "twitter.egl";
+		ctype = "twitter";
+		dependencies = [d1, d2, d3];
+	}
+
+	DependencyComponent d1 {
+		name = "TwitterConstants";
+		gencodetemplate = "twitterconstants.egl";
+		package = "be.pds.twitter";
+	}
+
+	DependencyComponent d2 {
+		name = "TwitterUtils";
+		gencodetemplate = "twitterutils.egl";
+		package = "be.pds.twitter";
+	}
+
+	DependencyComponent d3 {
+		name = "OAuthRequestTokenTask";
+		gencodetemplate = "oauthrequesttoken.egl";
+		package = "be.pds.twitter";
+	}
+}

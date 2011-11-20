@@ -1,0 +1,13 @@
+load "Component"
+
+Component timerComponent {
+	
+	AndroidComponent Timer {
+		package = "be.pds.timer";
+		gencodetemplate = "timer.egl";
+		ctype = "timer";
+
+		countdown : int;
+	}
+		
+}

@@ -1,0 +1,54 @@
+Model Component@2 {
+	
+	abstract Node ComponentType {
+		ctype@1		: String{id};
+	}
+
+	Node Component : ComponentType {
+		name		: String;
+		//inParams	: InParam[*] {ordered, unique};
+		//outParams	: OutParam[*] {ordered, unique};
+	}
+	
+	abstract Node Param {
+		name@1	: String;
+		value	: String;
+	}
+
+	Node InParam : Param { }
+
+	Node OutParam : Param { }
+
+	Node Connector {
+		from 	: OutParam[*];
+		to		: InParam[*];
+	}
+
+	// Android component for semantics and extensibility
+	Node AndroidComponent : Component {
+		gencodetemplate@1	: String;
+
+		package@1			: String;
+		layoutcomponents@2	: LayoutComponent@0[*];
+		
+		trigger@2			: Component@0[1];
+		isTriggerOf@2		: Component@0[1];
+		dependencies@1		: DependencyComponent[*];
+	}
+
+	// e.g. Button, EditText, TextView, ...
+	Node LayoutComponent@2 : Component {
+		layoutID	: String;
+		width		: String;
+		height		: String;
+		text		: String;
+		gravity		: String;
+	}
+
+	// Component for regular Java classes that have a dependency with an Android activity
+	Node DependencyComponent@1 { 
+		name 			: String;
+		gencodetemplate : String;
+		package 		: String;
+	}
+}

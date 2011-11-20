@@ -1,0 +1,8 @@
+package [%= dependency.package %]
+
+[%
+	var t : Template := TemplateFactory.load(compPath+dependency.gencodetemplate);
+	t.populate('dependency', dependency);
+	t.populate('basePath', compPath);
+%]
+[%=t.process()%]

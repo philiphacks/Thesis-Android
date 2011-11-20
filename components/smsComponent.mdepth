@@ -1,0 +1,14 @@
+load "Component"
+
+Component smsComponent {
+	
+	AndroidComponent SMS {
+		package = "be.pds.sms";
+		gencodetemplate = "sms.egl";
+		ctype = "sms";
+
+		text : String;
+		telephone : String;
+	}
+
+}

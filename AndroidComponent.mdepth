@@ -1,0 +1,30 @@
+load "Component"
+load "AndroidAction"
+
+Model AndroidComponent@2 imports Component, AndroidAction {
+
+	// Android component for semantics and extensibility
+	Node AndroidComponent : Component {
+		gencodetemplate@1	: String;
+
+		package@1			: String;
+		layoutcomponents@2	: LayoutComponent@0[*];
+		
+		// Trigger can be a LayoutComponent (e.g. Button) or another component (e.g. GeoComponent)
+		trigger@2			: AndroidComponent[1];
+		//trigger 			: AndroidComponent[1];
+
+		// isTriggerOf defines the bi-directional connection with another component
+		// isTriggerOf specifies the action that should be taken if it has a bi-directional connection
+		// a component could be the trigger of another component or a layoutcomponent
+		isTriggerOf@2		: AndroidComponent[1];
+		dependencies@1		: DependencyComponent[*];
+
+		properties@1 		: Data[*];
+	}
+
+	Edge Trigger(AndroidComponent.trigger, AndroidComponent.isTriggerOf) {
+		actions : 	Action@0[*];
+	}
+
+}

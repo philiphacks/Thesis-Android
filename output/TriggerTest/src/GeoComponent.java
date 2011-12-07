@@ -1,4 +1,3 @@
-[% out.setContentType('Java'); %]
 package be.pds.triggertest;
 
 import android.app.Activity;
@@ -13,31 +12,19 @@ public class GeoComponent {
 
 	private Activity parent;
 	private final String TAG = getClass().toString();
-	[% if (component.isTriggerOf.isDefined()) { %]
 	private SMSComponent isTriggerOf;
 
 	public void isTriggerOf(SMSComponent sms) {
 		this.isTriggerOf = sms;
 	}
-	[% } %]
 
 	public GeoComponent(Activity a) {
 		this.parent = a;
 		setupGeo();
 	}
 
-	[% if (component.layoutcomponents.isDefined() and component.layoutcomponents.size() > 0) { %]
-		[% for (c in component.layoutcomponents) { %]
-			private [%= c.type %] [%= c %];
-		[% } %]
-	[% } %]
 
-	private void setup[%= component %]() {
-		[% if (component.layoutcomponents.isDefined() and component.layoutcomponents.size() > 0) { %]
-			[% for (c in component.layoutcomponents) { %]
-	    	[%= c %] = ([%= c.type %]) findViewById(R.id.[%= c.layoutID %]);
-	    	[% } %]
-		[% } %]
+	private void setupmyGeo() {
 
 		// Acquire a reference to the system Location Manager
 		LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
@@ -48,9 +35,7 @@ public class GeoComponent {
 			@Override
 			public void onLocationChanged(Location location) {
 				// Called when a new location is found by the network location provider.
-				[% if (component.callback.isDefined()) { %]
-				[%= component.callback %](location);
-				[% } %]
+				useNewLocation(location);
 			}
 
 			@Override
@@ -72,26 +57,15 @@ public class GeoComponent {
 		// the third is the minimum change in distance between notifications
 	}
 
-	private void [%= component.callback %](Location loc) {
+	private void useNewLocation(Location loc) {
 		// A Geo component can never have a trigger.. It can only be a trigger of another component
-		[% if (component.isTriggerOf.isDefined()) { %]
 			// this component is the trigger of another component.
 			// What does this mean for a geocomponent?
 			// Check the type of isTriggerOf()
 			// If it is "SMS", probably use Geo to send an SMS.
-			[% if (component.isTriggerOf.isTypeOf(SMS)) { %]
 				// We found that this Geo Component is the trigger of an SMS component
 				// Find phone number and send the location
 				String location = "I am at location (" + loc.getLongitude() + ", " + loc.getLatitude() + ")";
 				this.isTriggerOf.action(this.isTriggerOf.geteditPhoneNr().getText().toString(), location);
-			[% } %]
-		[% } else if (component.action.isDefined()) { %]
-			// We found a defined action.
-			// This could be one of the following standard actions:
-			// 1. Fill in a text field (layoutcomponent)
-			// 2. Assign a variable
-			// 3. Change activities
-			// 4. Trigger a button (layoutcomponent)	
-		[% } %]
 	}
 }

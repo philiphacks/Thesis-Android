@@ -100,11 +100,6 @@ Activity TestActivity imports myComp, TestPresentation {
 		content = [myTwitter];
 		presentation = pres;
 	}
-
-	Activity act2 {
-		name = "PrepareRequestTokenActivity";
-		content = [];
-	}
 }
 
 // APPLICATION ----------------------------------------------------------------
@@ -113,5 +108,5 @@ Application myApp imports myComp, TestManifest, TestActivity {
 	name = "TwitterAndroid";
 	manifest = manDesc;
 	components = [myTwitter];
-	activities = [act1, act2];
+	activities = [act1];
 }

@@ -1,5 +1,3 @@
-package be.pds.twitter
-
 package be.pds.twitter;
 
 import oauth.signpost.OAuth;
@@ -23,7 +21,7 @@ public class TwitterUtils {
 		//AccessToken a = new AccessToken(token, secret);
 		AccessToken a = new AccessToken("409941945-IGPMPuEaMfDB78J5zxOJrD9ydB2XQYBT7lfGCtec", "0hxNJBer7BNSKXK9ied4FSvwe73kcd5v1HP7i1x2Trk");
 		Twitter twitter = new TwitterFactory().getInstance();
-		twitter.setOAuthConsumer(Constants.CONSUMER_KEY, Constants.CONSUMER_SECRET);
+		twitter.setOAuthConsumer(TwitterConstants.CONSUMER_KEY, TwitterConstants.CONSUMER_SECRET);
 		twitter.setOAuthAccessToken(a);
 
 		try {
@@ -40,7 +38,7 @@ public class TwitterUtils {
 		
 		AccessToken a = new AccessToken(token,secret);
 		Twitter twitter = new TwitterFactory().getInstance();
-		twitter.setOAuthConsumer(Constants.CONSUMER_KEY, Constants.CONSUMER_SECRET);
+		twitter.setOAuthConsumer(TwitterConstants.CONSUMER_KEY, TwitterConstants.CONSUMER_SECRET);
 		twitter.setOAuthAccessToken(a);
 		twitter.updateStatus(msg);
 	}

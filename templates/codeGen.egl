@@ -23,6 +23,7 @@
 			t.populate('application', application);
 			t.populate('basePath',    basePath);
 			t.populate('compPath',    compPath);
+			t.populate('codePath',	  codePath);
 			t.process();
 			t.generate(codePath+'src/' + activity.name + '.java');
 
@@ -42,24 +43,6 @@
 			}
 		}
 	}
-
-//	t := TemplateFactory.load(basePath+'genDependency.egl');
-//	if (application.components.isDefined() and application.components.size() > 0) {
-//		for (c in application.components) {
-//			if (c.dependencies.isDefined() and c.dependencies.size() > 0) {
-//				for (dep in c.dependencies) {
-//					dep.gencodetemplate.println();
-//					dep.println();
-//					t.populate('dependency', dep);
-//					t.populate('application', application);
-//					t.populate('basePath',    basePath);
-//					t.populate('compPath',    compPath);
-//					t.process();
-//					t.generate(codePath+'src/' + dep.name + '.java');
-//				}
-//			}
-//		}
-//	}
 
 	// generate Android layout
 	t := TemplateFactory.load(basePath+'genLayout.egl');

@@ -1,4 +1,3 @@
-[% out.setContentType('Java'); %]
 package be.pds.triggertest;
 
 import android.app.Activity;
@@ -17,10 +16,9 @@ public class SMSComponent {
 
 	private Activity parent;
 	private final String TAG = getClass().getName();
-	[% for (c in component.layoutcomponents) { %]
-	private [%= c.type %] [%= c %];
-	[% } %]
-	[% if (component.trigger.isDefined()) { %]
+	private EditText editPhoneNr;
+	private EditText editMessage;
+	private Button sendMessage;
 	private GeoComponent trigger;
 
 	public void setTrigger(GeoComponent geo) {
@@ -30,46 +28,29 @@ public class SMSComponent {
 	public void action(String phone, String msg) {
 		sendSMS(phone, msg);
 	}
-	[% } %]
 
 	public SMSComponent(Activity a) {
 		this.parent = a;
-		[% for (c in component.layoutcomponents) { %]
-		[%= c %] = ([%= c.type %]) findViewById(R.id.[%= c.layoutID %]);
-		[% } %]
-		setup[%= component.type %]();
+		editPhoneNr = (EditText) findViewById(R.id.txtPhoneNo);
+		editMessage = (EditText) findViewById(R.id.txtMessage);
+		sendMessage = (Button) findViewById(R.id.btnSendSMS);
+		setupSMS();
 	}
 
-	[% for (c in component.layoutcomponents) { %]
-	public [%= c.type %] get[%= c %]() {
-		return [%= c %];
+	public EditText geteditPhoneNr() {
+		return editPhoneNr;
 	}
-	[% } %]
+	public EditText geteditMessage() {
+		return editMessage;
+	}
+	public Button getsendMessage() {
+		return sendMessage;
+	}
 
-	private void setup[%= component.type %]() {
-		[% if (component.trigger.isDefined()) { %]
-			[% if (component.trigger.isTypeOf(Button)) { %]
-			System.out.println("this is a button.");
-		    [%= component.trigger %].setOnClickListener(new View.OnClickListener() {
-
-				@Override
-				public void onClick(View v) {
-					String phoneNo = editPhoneNr.getText().toString();
-					String message = editMessage.getText().toString();
-					if (phoneNo.length() > 0 && message.length() > 0) {
-						sendSMS(phoneNo, message);
-					} else {
-						Toast.makeText(getBaseContext(), "Please enter both phone number and message.",
-								Toast.LENGTH_SHORT).show();
-					}
-				}
-		    });
-		    [% } else if (component.trigger.isTypeOf(Geo)) { %]
+	private void setupSMS() {
 				// Found a trigger.. it is a Geo Component
 				// We should probably send an SMS with the Geo data.
 				// However, this will be processed in the Geo component.
-		    [% } %]
-		[% } %]
 		}
 
 	private void sendSMS(String phoneNumber, String message) {

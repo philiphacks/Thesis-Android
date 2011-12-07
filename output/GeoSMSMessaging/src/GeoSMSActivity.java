@@ -1,17 +1,4 @@
-package be.pds.sms;
-
-import android.app.Activity;
-import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
-import android.os.Bundle;
-import android.telephony.SmsManager;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.Toast;
+package be.pds.geosms;
 
 public class GeoSMSActivity extends Activity {
 
@@ -35,20 +22,9 @@ public class GeoSMSActivity extends Activity {
 	    editMessage = (EditText) findViewById(R.id.txtMessage);
 	    sendMessage = (Button) findViewById(R.id.btnSendSMS);
 	    
-		    sendMessage.setOnClickListener(new View.OnClickListener() {
-	
-				@Override
-				public void onClick(View v) {
-					String phoneNo = editPhoneNr.getText().toString();
-					String message = editMessage.getText().toString();
-					if (phoneNo.length() > 0 && message.length() > 0) {
-						sendSMS(phoneNo, message);
-					} else {
-						Toast.makeText(getBaseContext(), "Please enter both phone number and message.",
-								Toast.LENGTH_SHORT).show();
-					}
-				}
-		    });
+		// Found a trigger.. it is a Geo Component
+		// We should probably send an SMS with the Geo data.
+		// However, this will be processed in the Geo component.
 	}
 	
 	private void sendSMS(String phoneNumber, String message) {
@@ -154,10 +130,15 @@ public class GeoSMSActivity extends Activity {
 	}
 	
 	private void useNewLocation(Location loc) {
-		editMessage.setText(loc.toString());
-	    editMessage.invalidate();
-	
-	
+	// A Geo component can never have a trigger.. It can only be a trigger of another component
+		// this component is the trigger of another component.
+		// What does this mean for a geocomponent?
+		// Check the type of isTriggerOf()
+		// If it is "SMS", probably use Geo to send an SMS.
+	// We found that this Geo Component is the trigger of an SMS component
+	// Find phone number and send the location
+	String location = "I am at " + loc.toString();
+	sendSMS(editPhoneNr.getText().toString(), location);
 	}
 	
 }

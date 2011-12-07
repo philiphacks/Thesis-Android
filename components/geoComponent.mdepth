@@ -1,14 +1,20 @@
-load "Component"
+load "AndroidComponent"
 
-Component geoComponent imports Presentation {
+AndroidComponent geoComponent imports Presentation {
 	
 	AndroidComponent Geo {
-		package = "be.pds.thesis.geo";
+		package = "be.pds.geo";
 		gencodetemplate = "geo.egl";
 		ctype = "geo";
 
+		action : Component@0;
 		callback : String;
-		action: Component@0;
+
+		properties = [location]; 
 	}
 
+	Data location {
+		name = "location";
+		value = "4,5";
+	}
 }

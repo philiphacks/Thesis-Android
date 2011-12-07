@@ -1,4 +1,4 @@
-package [%= dependency.package %]
+package [%= dependency.package %];
 
 [%
 	var t : Template := TemplateFactory.load(compPath+dependency.gencodetemplate);

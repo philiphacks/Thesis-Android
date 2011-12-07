@@ -1,14 +1,22 @@
-load "Component"
+load "AndroidComponent"
 
-Component smsComponent {
+AndroidComponent smsComponent {
 	
 	AndroidComponent SMS {
 		package = "be.pds.sms";
 		gencodetemplate = "sms.egl";
 		ctype = "sms";
 
-		text : String;
-		telephone : String;
+		properties = [phone, message];
 	}
 
+	Data phone {
+		name = "phone";
+		value = "5664";
+	}
+
+	Data message {
+		name = "message";
+		value = "This is a default text message.";
+	}
 }

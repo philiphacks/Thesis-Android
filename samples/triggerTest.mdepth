@@ -6,7 +6,7 @@ load "components/geoComponent"
 
 Manifest TestManifest {
 	ManifestDescription manDesc {
-		package = "be.pds.geosms";
+		package = "be.pds.triggertest";
 		sdk = "8";
 		app_info = info;
 		permissions = [p1, p2, p3];
@@ -99,20 +99,22 @@ Presentation TestPresentation {
 
 // COMPONENTS -----------------------------------------------------------------
 
-Component MyTypeComponents imports smsComponent, geoComponent { }
-
-MyTypeComponents myComp imports TestPresentation {
+AndroidComponent MyTypeComponents imports smsComponent, geoComponent { 
 	SMS mySms {
 		layoutcomponents = [editPhoneNr, editMessage, sendMessage];
-		trigger = sendMessage;
+		trigger = myGeo;
 	}
 
 	Geo myGeo {
 		layoutcomponents = [];
 		callback = "useNewLocation";
-		action = editMessage;
+		isTriggerOf = mySms;
 	}
 }
+
+//MyTypeComponents myComp imports TestPresentation {
+
+//}
 
 Activity TestActivity imports myComp, TestPresentation {
 	Activity act {
@@ -125,7 +127,7 @@ Activity TestActivity imports myComp, TestPresentation {
 // APPLICATION ----------------------------------------------------------------
 
 Application myApp imports myComp, TestManifest, TestActivity {
-	name = "GeoSMSMessaging";
+	name = "TriggerTest";
 	manifest = manDesc;
 	components = [mySms, myGeo];
 	activities = [act];

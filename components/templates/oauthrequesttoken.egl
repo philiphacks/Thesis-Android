@@ -25,7 +25,7 @@ public class OAuthRequestTokenTask extends AsyncTask<Void, Void, Void> {
 			Log.i(TAG, "Retrieving request token from Twitter servers");
 			//Log.i(TAG, consumer.getConsumerKey());
 			//Log.i(TAG, consumer.getConsumerSecret());
-			final String url = provider.retrieveRequestToken(consumer, Constants.CALLBACK_URL);
+			final String url = provider.retrieveRequestToken(consumer, TwitterConstants.CALLBACK_URL);
 			Log.i(TAG, "Popping a browser with the authorize URL : " + url);
 			Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url)).setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP | Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_FROM_BACKGROUND);
 			context.startActivity(intent);

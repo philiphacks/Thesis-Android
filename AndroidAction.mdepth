@@ -1,0 +1,34 @@
+load "Component"
+load "Activity"
+
+Model AndroidAction imports Component, Activity {
+	
+	abstract Node Action {
+		ctype		: String{id};
+	}
+
+	// e.g. Fill in a text field or change a view...
+	Node ChangeLayoutAction : Action {
+		component 		: Component@0;
+	}
+
+	// e.g. trigger a button
+	Node CallLayoutAction : Action {
+		component 		: Component@0;
+	}
+
+	// assign the info variable of a component
+	Node ChangeVariableAction : Action {
+		variable 		: Data;
+	}
+
+	// Specify the target activity
+	Node ChangeActivityAction : Action {
+		newActivity 	: Activity;
+	}
+
+	// Call the action method of a component. 
+	Node CallComponentAction : Action {
+		method 			: String;
+	}
+}

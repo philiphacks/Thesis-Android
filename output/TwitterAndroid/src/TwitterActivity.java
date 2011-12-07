@@ -12,6 +12,7 @@ public class TwitterActivity extends Activity {
     }
 
 	
+	
 	private SharedPreferences prefs;
 	private final Handler mTwitterHandler = new Handler();
 	

@@ -1,5 +1,16 @@
 [% out.setContentType('Java'); %]
 
+[%
+	var temp : Template := TemplateFactory.load(compPath+'preparerequesttoken.egl');
+	temp.populate('refActivity', name);
+	temp.populate('basePath', basePath);
+	temp.populate('compPath', compPath);
+	temp.process();
+%]
+[%
+	temp.generate(codePath+'src/' + 'PrepareRequestTokenActivity.java');
+%]
+
 private SharedPreferences prefs;
 private final Handler mTwitterHandler = new Handler();
 

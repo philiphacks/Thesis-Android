@@ -2,7 +2,7 @@ load "AndroidComponent"
 
 AndroidComponent geoComponent imports Presentation {
 	
-	AndroidComponent Geo {
+	AComp Geo {
 		package = "be.pds.geo";
 		gencodetemplate = "geo.egl";
 		ctype = "geo";

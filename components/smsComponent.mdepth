@@ -2,7 +2,7 @@ load "AndroidComponent"
 
 AndroidComponent smsComponent {
 	
-	AndroidComponent SMS {
+	AComp SMS {
 		package = "be.pds.sms";
 		gencodetemplate = "sms.egl";
 		ctype = "sms";

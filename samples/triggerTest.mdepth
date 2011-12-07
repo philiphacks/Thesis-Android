@@ -99,7 +99,9 @@ Presentation TestPresentation {
 
 // COMPONENTS -----------------------------------------------------------------
 
-AndroidComponent MyTypeComponents imports smsComponent, geoComponent { 
+AndroidComponent MyTypeComponents imports smsComponent, geoComponent { }
+
+MyTypeComponents myComp imports TestPresentation {
 	SMS mySms {
 		layoutcomponents = [editPhoneNr, editMessage, sendMessage];
 		trigger = myGeo;
@@ -111,10 +113,6 @@ AndroidComponent MyTypeComponents imports smsComponent, geoComponent {
 		isTriggerOf = mySms;
 	}
 }
-
-//MyTypeComponents myComp imports TestPresentation {
-
-//}
 
 Activity TestActivity imports myComp, TestPresentation {
 	Activity act {

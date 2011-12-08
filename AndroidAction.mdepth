@@ -4,7 +4,7 @@ load "Activity"
 Model AndroidAction imports Component, Activity {
 	
 	abstract Node Action {
-		ctype		: String{id};
+		ctype			: String{id};
 	}
 
 	// e.g. Fill in a text field or change a view...
@@ -28,7 +28,5 @@ Model AndroidAction imports Component, Activity {
 	}
 
 	// Call the action method of a component. 
-	Node CallComponentAction : Action {
-		method 			: String;
-	}
+	Node CallComponentAction : Action { }
 }

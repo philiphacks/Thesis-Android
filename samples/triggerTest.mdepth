@@ -97,6 +97,12 @@ Presentation TestPresentation {
 	}
 }
 
+// ACTIONS --------------------------------------------------------------------
+
+AndroidAction TestActions {
+	CallComponentAction cca { }
+}
+
 // COMPONENTS -----------------------------------------------------------------
 
 AndroidComponent MyTypeComponents imports smsComponent, geoComponent { }
@@ -113,6 +119,15 @@ MyTypeComponents myComp imports TestPresentation {
 		isTriggerOf = mySms;
 	}
 }
+
+AndroidComponent TriggerComp imports myComp, TestActions {
+	Trigger t1(mySms, myGeo) {
+		//actions = [cca];
+		weight = 5;
+	}
+}
+
+// ACTIVITIES -----------------------------------------------------------------
 
 Activity TestActivity imports myComp, TestPresentation {
 	Activity act {

@@ -1,0 +1,19 @@
+Model Session {
+	
+	Node SessionObject {
+		users 		: User[*];
+	}
+	
+	// Placeholder Registration process	
+	Node User {
+		first_name 		: String;
+		last_name 		: String;
+		username 		: String;
+		password 		: String;
+		role 			: Role;
+	}
+
+	Node Role {
+		name 		: String;
+	}
+}

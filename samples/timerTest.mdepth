@@ -1,0 +1,109 @@
+load "Application"
+load "components/GlueComponents"
+
+// MANIFEST ------------------------------------------------------------------
+
+Manifest TestManifest {
+	ManifestDescription manDesc {
+		package = "be.pds.timer";
+		sdk = "8";
+		app_info = info;
+		permissions = [p1];
+	}
+
+	AppInfo info {
+		activities = [a1];
+	}
+
+	Permission p1 {
+		name = "android.permission.ACCESS_FINE_LOCATION";
+	}
+
+	Activity a1 {
+		name = ".TimerActivity";
+		intent = i;
+	}
+
+	IntentFilter i { }
+}
+
+// PRESENTATION --------------------------------------------------------------
+
+Presentation TestPresentation {
+
+	Layout l {
+		name = "main";
+		layoutDesc = ld;
+	}
+
+	LayoutDescription ld {
+		type = layoutType;
+		components = [actInfo];
+	}
+
+	LayoutType layoutType {
+		name = "LinearLayout";
+		orientation = "vertical";
+	}
+
+	TextView actInfo {
+		layoutID = "actInfo";
+		width = "fill_parent";
+		height = "wrap_content";
+		text = "This application has no specific layout. It uses a timer and displays your current location.";
+	}
+
+	Presentation pres {
+		activityname = "TimerActivity";
+		layout = l;
+	}
+}
+
+// ACTIONS AND DATA -----------------------------------------------------------
+
+AndroidAction TestActions {
+	CallComponentAction cca {
+		properties = [];
+	}
+
+	UseComponentResultAction ucra {
+		action = "showToast";
+	}
+}
+
+// COMPONENTS -----------------------------------------------------------------
+
+GlueComponent myComp imports TestPresentation, TestActions {
+	Geo myGeo {
+		layoutcomponents = [];
+		callback = "useNewLocation";
+	}
+
+	Timer myTimer {
+		layoutcomponents = [];
+		countdown = 5000;
+		continuous = true;
+	}
+
+	Trigger t1(myGeo, myTimer) {
+		actions = [cca, ucra];
+	}
+}
+
+// ACTIVITIES -----------------------------------------------------------------
+
+Activity TestActivity imports myComp, TestPresentation {
+	Activity act1 {
+		name = "TimerActivity";
+		content = [myTimer, myGeo];
+		presentation = pres;
+	}
+}
+
+// APPLICATION ----------------------------------------------------------------
+
+Application myApp imports TestManifest, TestActivity {
+	name = "Timer";
+	manifest = manDesc;
+	activities = [act1];
+}

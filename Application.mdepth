@@ -1,10 +1,8 @@
 load "Manifest"
-load "Component"
 load "Activity"
 
-Model Application imports Component, Activity, Manifest {
+Model Application imports Activity, Manifest {
 	name			: String;
 	manifest		: ManifestDescription[1];
-	components		: Component@0[*];
 	activities		: Activity[*];
 }

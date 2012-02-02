@@ -1,0 +1,116 @@
+load "Application"
+load "components/foursquareComponent"
+load "components/geoComponent"
+
+// MANIFEST ------------------------------------------------------------------
+
+Manifest TestManifest {
+	ManifestDescription manDesc {
+		package = "be.pds.foursquaretest";
+		sdk = "8";
+		app_info = info;
+		permissions = [p1, p2];
+	}
+
+	AppInfo info {
+		activities = [a1];
+	}
+
+	Permission p1 {
+		name = "android.permission.INTERNET";
+	}
+
+	Permission p2 {
+		name = "android.permission.ACCESS_FINE_LOCATION";
+	}
+
+	Activity a1 {
+		name = ".FoursquareActivity";
+		intent = i;
+	}
+
+	IntentFilter i { }
+}
+
+// PRESENTATION --------------------------------------------------------------
+
+Presentation TestPresentation {
+
+	Layout l {
+		name = "main";
+		layoutDesc = ld;
+	}
+
+	LayoutDescription ld {
+		type = layoutType;
+		components = [showText];
+	}
+
+	LayoutType layoutType {
+		name = "LinearLayout";
+		orientation = "vertical";
+	}
+
+	TextView showText {
+		layoutID = "showText";
+		width = "fill_parent";
+		height = "wrap_content";
+		text = "Trying to get information on location (51.134083, 5.019743)";
+	}
+
+	Presentation pres {
+		activityname = "GeoSMSActivity";
+		layout = l;
+	}
+}
+
+// ACTIONS AND DATA -----------------------------------------------------------
+
+AndroidAction TestActions {
+	CallComponentAction cca { 
+		properties = [location];
+	}
+
+	Data location {
+		name = "location";
+		value = "51.134083, 5.019743";
+		datatype = "String";
+	}
+}
+
+// COMPONENTS -----------------------------------------------------------------
+
+AndroidComponent MyTypeComponents imports foursquareComponent, geoComponent { }
+
+MyTypeComponents myComp imports TestPresentation, TestActions {
+	Geo myGeo {
+		layoutcomponents = [];
+		callback = "useNewLocation";
+	}
+
+	Foursquare my4sq {
+		layoutcomponents = [showText];
+	}
+
+	Trigger t1(my4sq, myGeo) {
+		actions = [cca];
+	}
+}
+
+// ACTIVITIES -----------------------------------------------------------------
+
+Activity TestActivity imports myComp, TestPresentation {
+	Activity act {
+		name = "FoursquareActivity";
+		content = [myGeo, my4sq];
+		presentation = pres;
+	}
+}
+
+// APPLICATION ----------------------------------------------------------------
+
+Application myApp imports TestManifest, TestActivity {
+	name = "FoursquareTest";
+	manifest = manDesc;
+	activities = [act];
+}

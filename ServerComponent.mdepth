@@ -1,0 +1,8 @@
+load "Component"
+
+Model ServerComponent imports Component {
+
+	Node SComp {
+		ctype 	: String;
+	}
+}

@@ -7,13 +7,12 @@ AndroidComponent geoComponent imports Presentation {
 		gencodetemplate = "geo.egl";
 		ctype = "geo";
 
-		action : Component@0;
 		callback : String;
 
 		properties = [location]; 
 	}
 
-	Data location {
+	ComponentData location {
 		name = "location";
 		value = "4,5";
 	}

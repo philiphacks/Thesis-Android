@@ -1,8 +1,8 @@
-load "Component"
+load "AndroidComponent"
 
-Component twitterComponent {
+AndroidComponent twitterComponent {
 	
-	AndroidComponent Twitter {
+	AComp Twitter {
 		package = "be.pds.twitter";
 		gencodetemplate = "twitter.egl";
 		ctype = "twitter";

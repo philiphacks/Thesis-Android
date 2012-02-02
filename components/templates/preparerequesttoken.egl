@@ -1,4 +1,4 @@
-package be.pds.twitter;
+package [%= package %];
 
 import oauth.signpost.OAuth;
 import oauth.signpost.OAuthConsumer;

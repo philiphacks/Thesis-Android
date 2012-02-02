@@ -1,0 +1,11 @@
+load "Presentation"
+load "AndroidAction"
+
+Model ActionList imports Presentation, AndroidAction {
+	
+	Node ActionList {
+		target 		: LayoutComponent[1];
+		actions 	: Action[*];
+	}
+
+}

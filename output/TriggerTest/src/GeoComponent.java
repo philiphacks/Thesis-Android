@@ -1,5 +1,7 @@
 package be.pds.triggertest;
 
+import java.util.HashMap;
+
 import android.app.Activity;
 import android.content.Context;
 import android.location.Location;
@@ -8,26 +10,31 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 
-public class GeoComponent {
+import be.pds.thesis.*;
 
-	private Activity parent;
+public class GeoComponent extends AndroidComponent {
+
 	private final String TAG = getClass().toString();
-	private SMSComponent isTriggerOf;
+	private AndroidComponent isTriggerOf;
 
-	public void isTriggerOf(SMSComponent sms) {
-		this.isTriggerOf = sms;
+	public void isTriggerOf(AndroidComponent comp) {
+		this.isTriggerOf = comp;
 	}
 
 	public GeoComponent(Activity a) {
-		this.parent = a;
+		super(a);
 		setupGeo();
 	}
 
 
-	private void setupmyGeo() {
+	public void action(HashMap<String, Object> properties) {
+		// do nothing.
+	}
+
+	private void setupGeo() {
 
 		// Acquire a reference to the system Location Manager
-		LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+		LocationManager locationManager = (LocationManager) this.parent.getSystemService(Context.LOCATION_SERVICE);
 		
 		// Define a listener that responds to location updates
 		LocationListener locationListener = new LocationListener() {
@@ -58,14 +65,14 @@ public class GeoComponent {
 	}
 
 	private void useNewLocation(Location loc) {
-		// A Geo component can never have a trigger.. It can only be a trigger of another component
-			// this component is the trigger of another component.
-			// What does this mean for a geocomponent?
-			// Check the type of isTriggerOf()
-			// If it is "SMS", probably use Geo to send an SMS.
-				// We found that this Geo Component is the trigger of an SMS component
-				// Find phone number and send the location
-				String location = "I am at location (" + loc.getLongitude() + ", " + loc.getLatitude() + ")";
-				this.isTriggerOf.action(this.isTriggerOf.geteditPhoneNr().getText().toString(), location);
+		String location = "I am at location (" + loc.getLongitude() + ", " + loc.getLatitude() + ")";
+		Log.i(TAG, location);
+		for (AndroidAction a : actions) {
+			if (a instanceof CallComponentAction) {
+				a.setProperty("message", location);
+				a.setCalledComponent(this.isTriggerOf);
+			}
+			a.execute();	
+		}
 	}
 }

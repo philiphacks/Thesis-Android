@@ -28,7 +28,10 @@ Model Presentation imports Component {
 
 	Node Button : LayoutComponent { }
 
-	Node EditText : LayoutComponent { }
+	Node EditText : LayoutComponent {
+		password 	: String;
+	}
 
 	Node TextView : LayoutComponent { }
+
 }

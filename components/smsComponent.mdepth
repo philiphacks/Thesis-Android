@@ -10,12 +10,12 @@ AndroidComponent smsComponent {
 		properties = [phone, message];
 	}
 
-	Data phone {
+	ComponentData phone {
 		name = "phone";
 		value = "5664";
 	}
 
-	Data message {
+	ComponentData message {
 		name = "message";
 		value = "This is a default text message.";
 	}

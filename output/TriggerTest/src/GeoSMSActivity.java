@@ -1,5 +1,12 @@
 package be.pds.triggertest;
 
+import be.pds.thesis.*;
+
+import java.util.HashMap;
+
+import android.app.Activity;
+import android.os.Bundle;
+
 public class GeoSMSActivity extends Activity {
 
 	private SMSComponent mySms;
@@ -12,9 +19,18 @@ public class GeoSMSActivity extends Activity {
         setContentView(R.layout.main);
 
 			mySms = new SMSComponent(this);
-				mySms.setTrigger(myGeo);
 			myGeo = new GeoComponent(this);
-				myGeo.isTriggerOf(mySms);
+
+    		mySms.setTrigger(myGeo);
+    		myGeo.isTriggerOf(mySms);
+
+					HashMap<String, Object> properties = new HashMap<String, Object>();
+						String phoneNr = "5664";
+						properties.put("phoneNr", phoneNr);
+						String message = "Default message";
+						properties.put("message", message);
+					CallComponentAction cca = new CallComponentAction(properties);
+					myGeo.addAction(cca);
     }
 
 	

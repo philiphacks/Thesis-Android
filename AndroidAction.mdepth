@@ -1,10 +1,12 @@
 load "Component"
 load "Activity"
+load "ServerProperty"
 
-Model AndroidAction imports Component, Activity {
+Model AndroidAction imports Component, Activity, ServerProperty {
 	
 	abstract Node Action {
 		ctype			: String{id};
+		condition 		: Action;
 	}
 
 	// e.g. Fill in a text field or change a view...
@@ -12,21 +14,48 @@ Model AndroidAction imports Component, Activity {
 		component 		: Component@0;
 	}
 
-	// e.g. trigger a button
-	Node CallLayoutAction : Action {
-		component 		: Component@0;
+	// e.g. use the value of a text field to call the action method of a component
+	Node ExtractLayoutAction : Action {
+		source 			: Component@0;
+		name 			: String;
 	}
 
-	// assign the info variable of a component
-	Node ChangeVariableAction : Action {
+	// assign the property of a component
+	Node AssignPropertyAction : Action {
 		variable 		: Data;
 	}
 
 	// Specify the target activity
 	Node ChangeActivityAction : Action {
-		newActivity 	: Activity;
+		// Due to design problems, this can't be a reference to Activity for now...
+		//newActivity 	: Activity;
+		
+		oldActivity 	: String;
+		newActivity 	: String;
+		data 			: Data[*];
 	}
 
-	// Call the action method of a component. 
-	Node CallComponentAction : Action { }
+	// Call the action method of a component.
+	// Might save a value if it's a sensor (i.e. geo)
+	// Or execute a real action if it's an actuator (i.e. send an SMS)
+	Node CallComponentAction : Action {
+		// properties needed to call the action method of the component
+		properties		: Data[*];
+	}
+
+	// Use the result of a component from the properties hashmap
+	Node UseComponentResultAction : Action {
+		// Change this to an ENUM, e.g. to show a Toast message
+		action 			: String;
+	}
+
+	Node CheckServerProperty : Action {
+		property 	: ServerProperty[1];
+	}
+
+	Node Data {
+		name 		: String;
+		value 		: String;
+		datatype 	: String;
+	}
 }

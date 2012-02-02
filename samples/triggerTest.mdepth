@@ -97,33 +97,42 @@ Presentation TestPresentation {
 	}
 }
 
-// ACTIONS --------------------------------------------------------------------
+// ACTIONS AND DATA -----------------------------------------------------------
 
 AndroidAction TestActions {
-	CallComponentAction cca { }
+	CallComponentAction cca { 
+		properties = [phoneNr, message];
+	}
+
+	Data phoneNr {
+		name = "phoneNr";
+		value = "5664";
+		datatype = "String";
+	}
+
+	Data message {
+		name = "message";
+		value = "Default message";
+		datatype = "String";
+	}
 }
 
 // COMPONENTS -----------------------------------------------------------------
 
 AndroidComponent MyTypeComponents imports smsComponent, geoComponent { }
 
-MyTypeComponents myComp imports TestPresentation {
+MyTypeComponents myComp imports TestPresentation, TestActions {
 	SMS mySms {
 		layoutcomponents = [editPhoneNr, editMessage, sendMessage];
-		trigger = myGeo;
 	}
 
 	Geo myGeo {
 		layoutcomponents = [];
 		callback = "useNewLocation";
-		isTriggerOf = mySms;
 	}
-}
 
-AndroidComponent TriggerComp imports myComp, TestActions {
 	Trigger t1(mySms, myGeo) {
-		//actions = [cca];
-		weight = 5;
+		actions = [cca];
 	}
 }
 
@@ -139,9 +148,8 @@ Activity TestActivity imports myComp, TestPresentation {
 
 // APPLICATION ----------------------------------------------------------------
 
-Application myApp imports myComp, TestManifest, TestActivity {
+Application myApp imports TestManifest, TestActivity {
 	name = "TriggerTest";
 	manifest = manDesc;
-	components = [mySms, myGeo];
 	activities = [act];
 }

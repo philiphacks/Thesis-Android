@@ -1,0 +1,10 @@
+load "Component"
+load "Session"
+
+ServerComponent chatComponent imports Session {
+	
+	SComp Chat {
+		//database		: String; //MySQLConnection;
+	}
+	
+}

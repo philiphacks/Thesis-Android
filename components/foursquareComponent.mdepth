@@ -1,0 +1,11 @@
+load "AndroidComponent"
+
+AndroidComponent foursquareComponent {
+
+	AComp Foursquare {
+		package = "be.pds.foursquare";
+		gencodetemplate = "foursquare.egl";
+		ctype = "foursquare";
+	}
+	
+}

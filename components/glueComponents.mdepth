@@ -1,5 +1,22 @@
 load "components/smsComponent"
+load "components/geoComponent"
+load "components/timerComponent"
+load "components/twitterComponent"
+load "components/foursquareComponent"
+load "components/facebookComponent"
+load "components/loginComponent"
+load "components/chatComponent"
+load "AndroidAction"
 
-Component GlueComponent imports smsComponent
+AndroidComponent GlueComponent imports smsComponent,
+									   geoComponent,
+									   timerComponent,
+									   twitterComponent,
+									   foursquareComponent,
+									   facebookComponent,
+									   loginComponent,
+									   chatComponent,
+									   AndroidAction
 {
+	actions 	: Action[*];
 }

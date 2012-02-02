@@ -2,7 +2,7 @@ load "Presentation"
 load "Component"
 
 Model Activity imports Presentation, Component {
-	
+
 	Node Activity {
 		name			: String;
 		content			: Component@0[*];

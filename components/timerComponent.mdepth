@@ -1,13 +1,14 @@
-load "Component"
+load "AndroidComponent"
 
-Component timerComponent {
+AndroidComponent timerComponent {
 	
-	AndroidComponent Timer {
+	AComp Timer {
 		package = "be.pds.timer";
 		gencodetemplate = "timer.egl";
 		ctype = "timer";
 
 		countdown : int;
+		continuous : boolean;
 	}
 		
 }

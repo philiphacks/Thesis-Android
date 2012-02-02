@@ -1,0 +1,13 @@
+load "Session"
+load "ServerComponent"
+
+Model Server imports Session, ServerComponent {
+
+	Node Server {
+		session 		: SessionObject;
+		host 			: String;
+		port 			: int;
+		//configuration 	: String;
+		components 		: SComp[*];	
+	}
+}

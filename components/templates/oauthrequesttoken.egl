@@ -1,3 +1,5 @@
+package [%= dependency.package %];
+
 import oauth.signpost.OAuthConsumer;
 import oauth.signpost.OAuthProvider;
 import android.content.Context;

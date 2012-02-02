@@ -1,0 +1,217 @@
+load "Application"
+load "Server"
+load "ServerProperty"
+load "components/GlueComponents"
+
+// MANIFEST ------------------------------------------------------------------
+
+Manifest TestManifest {
+	ManifestDescription manDesc {
+		package = "be.pds.collaborative";
+		sdk = "8";
+		app_info = info;
+		permissions = [];
+	}
+
+	AppInfo info {
+		activities = [a1, a2];
+	}
+
+	Activity a1 {
+		name = ".LoginActivity";
+		intent = i;
+	}
+
+	Activity a2 {
+		name = ".MainActivity";
+	}
+
+	IntentFilter i { }
+}
+
+// PRESENTATION --------------------------------------------------------------
+
+Presentation TestPresentation {
+
+	Layout l1 {
+		name = "login";
+		layoutDesc = ld1;
+	}
+
+	Layout l2 {
+		name = "main";
+		layoutDesc = ld2;
+	}
+
+	LayoutDescription ld1 {
+		type = layoutType;
+		components = [usernameView, usernameText, passwordView, passwordText, loginButton];
+	}
+
+	LayoutDescription ld2 {
+		type = layoutType;
+		components = [inActTwo];
+	}
+
+	LayoutType layoutType {
+		name = "LinearLayout";
+		orientation = "vertical";
+	}
+
+	TextView usernameView {
+		layoutID = "usernameView";
+		width = "fill_parent";
+		height = "wrap_content";
+		text = "Username";
+	}
+
+	EditText usernameText {
+		layoutID = "usernameText";
+		width = "fill_parent";
+		height = "wrap_content";
+	}
+
+	TextView passwordView {
+		layoutID = "passwordView";
+		width = "fill_parent";
+		height = "wrap_content";
+		text = "Password";
+	}
+
+	EditText passwordText {
+		layoutID = "passwordText";
+		width = "fill_parent";
+		height = "wrap_content";
+		password = "true";
+	}
+
+	Button loginButton {
+		layoutID = "loginButton";
+		width = "wrap_content";
+		height = "wrap_content";
+		text = "Login!";
+	}
+
+	TextView inActTwo {
+		layoutID = "inActTwo";
+		width = "fill_parent";
+		height = "wrap_content";
+		text = "You're in activity two!";
+	}
+
+	Presentation pres1 {
+		activityname = "LoginActivity";
+		layout = l1;
+	}
+
+	Presentation pres2 {
+		activityname = "MainActivity";
+		layout = l2;
+	}
+}
+
+// SERVER ---------------------------------------------------------------------
+
+Session mySession {
+	SessionObject sessionObj {
+		users = [u1, u2];
+	}
+
+	User u1 {
+		first_name = "Philip";
+		last_name = "De Smedt";
+		username = "phil";
+		password = "foobar";
+		role = admin;
+	}
+
+	User u2 {
+		first_name = "Juan";
+		last_name = "de Lara";
+		username = "juan";
+		password = "foobar2";
+		role = admin;
+	}
+
+	Role admin {
+		name = "admin";
+	}
+}
+
+Server myServer imports mySession {
+	session = sessionObj;
+	host = "localhost";
+	port = 80;
+	components = [chatComponent];
+}
+
+// ACTIONS AND DATA -----------------------------------------------------------
+
+AndroidAction TestActions imports TestPresentation {
+
+	LoginProperty lp {
+		return = false;	
+	}
+
+	CheckServerProperty csp {
+		property = lp;
+	}
+
+	ChangeActivityAction toMainAct {
+		oldActivity = "LoginActivity";
+		newActivity = "MainActivity";
+		data = [passData];
+		condition = [csp];
+	}
+
+	Data passData {
+		name = "user";
+		value = "phil"; //usernameText.text;
+		datatype = "String";
+	}
+}
+
+// TRIGGERS ------------------------------------------------------------------
+
+ActionList TestActionList imports TestActions, TestPresentation {
+	ActionList triggerLogin {
+		target = loginButton;
+		// Sequentially specify which actions you want to execute
+		actions = [toMainAct];
+	}
+}
+
+// COMPONENTS -----------------------------------------------------------------
+
+GlueComponent myComp imports TestActions {
+
+	Login login {
+		host = "localhost";
+		port = 80;	
+	}
+
+}
+
+// ACTIVITIES -----------------------------------------------------------------
+
+Activity TestActivity imports myComp, TestPresentation {
+	Activity act1 {
+		name = "LoginActivity";
+		content = [login];
+		presentation = pres1;
+	}
+
+	Activity act2 {
+		name = "MainActivity";
+		content = [];
+		presentation = pres2;
+	}
+}
+
+// APPLICATION ----------------------------------------------------------------
+
+Application myApp imports TestManifest, TestActivity {
+	name = "CollaborativeKnowledgePlatform";
+	manifest = manDesc;
+	activities = [act1, act2];
+}

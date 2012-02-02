@@ -1,0 +1,14 @@
+load "Component"
+
+AndroidComponent loginComponent {
+	
+	AComp Login {
+		ctype = "login";
+		gencodetemplate = "login.egl";
+
+		host 			: String;
+		port 			: int;
+		username		: String;
+		password 		: String;
+	}
+}

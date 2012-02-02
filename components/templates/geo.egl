@@ -1,5 +1,7 @@
 [% out.setContentType('Java'); %]
-package be.pds.triggertest;
+package [%= package %];
+
+import java.util.HashMap;
 
 import android.app.Activity;
 import android.content.Context;
@@ -9,38 +11,54 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 
-public class GeoComponent {
+import be.pds.thesis.*;
 
-	private Activity parent;
+public class GeoComponent extends AndroidComponent {
+
 	private final String TAG = getClass().toString();
-	[% if (component.isTriggerOf.isDefined()) { %]
-	private SMSComponent isTriggerOf;
+	private Location location;
+	[% if (component.trigger.isDefined()) { %]
+	private AndroidComponent isTriggerOf;
 
-	public void isTriggerOf(SMSComponent sms) {
-		this.isTriggerOf = sms;
+	public void isTriggerOf(AndroidComponent comp) {
+		this.isTriggerOf = comp;
 	}
 	[% } %]
+	[% if (component.isTriggerOf.isDefined()) { %]
+	private AndroidComponent trigger;
 
-	public GeoComponent(Activity a) {
-		this.parent = a;
-		setupGeo();
+	public void setTrigger(AndroidComponent comp) {
+		this.trigger = comp;
 	}
+	[% } %]
 
 	[% if (component.layoutcomponents.isDefined() and component.layoutcomponents.size() > 0) { %]
 		[% for (c in component.layoutcomponents) { %]
 			private [%= c.type %] [%= c %];
 		[% } %]
 	[% } %]
+	
+	public GeoComponent(Activity a) {
+		super(a);
+		setupGeo();
+	}
 
-	private void setup[%= component %]() {
+	public void action(HashMap<String, Object> properties) {
+		Log.i(TAG, "executing action method");
+		properties.put("resultType", "geo");
+		properties.put("result", (Location)this.location);
+	}
+
+	private void setupGeo() {
+		this.location = new Location("");
 		[% if (component.layoutcomponents.isDefined() and component.layoutcomponents.size() > 0) { %]
 			[% for (c in component.layoutcomponents) { %]
-	    	[%= c %] = ([%= c.type %]) findViewById(R.id.[%= c.layoutID %]);
+	    	[%= c %] = ([%= c.type %]) this.parent.findViewById(R.id.[%= c.layoutID %]);
 	    	[% } %]
 		[% } %]
 
 		// Acquire a reference to the system Location Manager
-		LocationManager locationManager = (LocationManager) this.getSystemService(Context.LOCATION_SERVICE);
+		LocationManager locationManager = (LocationManager) this.parent.getSystemService(Context.LOCATION_SERVICE);
 		
 		// Define a listener that responds to location updates
 		LocationListener locationListener = new LocationListener() {
@@ -73,25 +91,17 @@ public class GeoComponent {
 	}
 
 	private void [%= component.callback %](Location loc) {
-		// A Geo component can never have a trigger.. It can only be a trigger of another component
-		[% if (component.isTriggerOf.isDefined()) { %]
-			// this component is the trigger of another component.
-			// What does this mean for a geocomponent?
-			// Check the type of isTriggerOf()
-			// If it is "SMS", probably use Geo to send an SMS.
-			[% if (component.isTriggerOf.isTypeOf(SMS)) { %]
-				// We found that this Geo Component is the trigger of an SMS component
-				// Find phone number and send the location
-				String location = "I am at location (" + loc.getLongitude() + ", " + loc.getLatitude() + ")";
-				this.isTriggerOf.action(this.isTriggerOf.geteditPhoneNr().getText().toString(), location);
-			[% } %]
-		[% } else if (component.action.isDefined()) { %]
-			// We found a defined action.
-			// This could be one of the following standard actions:
-			// 1. Fill in a text field (layoutcomponent)
-			// 2. Assign a variable
-			// 3. Change activities
-			// 4. Trigger a button (layoutcomponent)	
-		[% } %]
+		this.location = loc;
+		String locString = "I am at location (" + loc.getLongitude() + ", " + loc.getLatitude() + ")";
+		Log.i(TAG, locString);
+		for (AndroidAction a : actions) {
+			if (a instanceof CallComponentAction) {
+				a.setProperty("location", loc);
+				[% if (component.trigger.isDefined()) { %]
+				((CallComponentAction)a).setCalledComponent(this.isTriggerOf);
+				[% } %]
+			}
+			a.execute();	
+		}
 	}
 }

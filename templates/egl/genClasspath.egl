@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="gen"/>
+	
+[% for (t in types) { %]
+	[% if (t == 'twitter') { %]
+		<classpathentry kind="lib" path="/Users/philip/metadepth/collaborative/libraries/httpclient-4.0.1.jar"/>
+		<classpathentry kind="lib" path="/Users/philip/metadepth/collaborative/libraries/signpost-commonshttp4-1.2.1.1.jar"/>
+		<classpathentry kind="lib" path="/Users/philip/metadepth/collaborative/libraries/signpost-core-1.2.1.1.jar"/>
+		<classpathentry kind="lib" path="/Users/philip/metadepth/collaborative/libraries/twitter4j-android-2.2.5/lib/twitter4j-core-android-2.2.5.jar"/>
+	[% } else if (t == 'facebook') { %]
+		
+	[% } %]
+[% } %]
+	<classpathentry kind="output" path="bin"/>
+</classpath>

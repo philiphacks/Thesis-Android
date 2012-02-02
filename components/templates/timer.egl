@@ -1,36 +1,91 @@
 [% out.setContentType('Java'); %]
+package [%= package %];
 
-private final String TAG = getClass().getName();
-private Location lastLocation;
+import android.app.Activity;
+import android.os.CountDownTimer;
+import android.widget.Toast;
+import android.util.Log;
+import java.util.HashMap;
 
-[% for (c in component.layoutcomponents) { %]
-private [%= c.type %] [%= c %];
-[% } %]
+import be.pds.thesis.*;
 
-private void setup[%= component %]() { 
+public class TimerComponent extends AndroidComponent {
+
+	private final String TAG = getClass().getName();
+	private HashMap<String, Object> result;
+	[% if (component.trigger.isDefined()) { %]
+	private AndroidComponent isTriggerOf;
+
+	public void isTriggerOf(AndroidComponent comp) {
+		this.isTriggerOf = comp;
+	}
+	[% } %]
+	[% if (component.isTriggerOf.isDefined()) { %]
+	private AndroidComponent trigger;
+
+	public void setTrigger(AndroidComponent comp) {
+		this.trigger = comp;
+	}
+	[% } %]
+
+	[% if (component.layoutcomponents.isDefined() and component.layoutcomponents.size() > 0) { %]
 	[% for (c in component.layoutcomponents) { %]
-    [%= c %] = ([%= c.type %]) findViewById(R.id.[%= c.layoutID %]);
-    [% } %]
+	private [%= c.type %] [%= c %];
+	[% } %]
+	[% } %]
 
-    Log.i(TAG, "setupTimer()");
-	new CountDownTimer([%= component.countdown %], 1000) {
-		@Override
-		public void onFinish() {
-			if (lastLocation != null) {
-				String lon = String.valueOf(lastLocation.getLongitude());
-				String lat = String.valueOf(lastLocation.getLatitude());
-				String msg = "Last known location: (" + lon + ", " + lat + ")";
-				Toast.makeText(getBaseContext(), msg, Toast.LENGTH_LONG).show();
-			} else {
-				Toast.makeText(getBaseContext(), "No location found.", Toast.LENGTH_LONG).show();
+	public TimerComponent(Activity a) {
+		super(a);
+		[% if (component.layoutcomponents.isDefined() and component.layoutcomponents.size() > 0) { %]
+		[% for (c in component.layoutcomponents) { %]
+	    [%= c %] = ([%= c.type %]) findViewById(R.id.[%= c.layoutID %]);
+	    [% } %]
+	    [% } %]
+
+		setupTimer();
+	}
+
+	public void action(HashMap<String, Object> properties) {
+		setupTimer();
+	}
+
+	private void setupTimer() {
+	    Log.i(TAG, "setupTimer()");
+	    final AndroidComponent myself = this;
+		new CountDownTimer([%= component.countdown %], 1000) {
+			@Override
+			public void onFinish() {
+				for (AndroidAction a : actions) {
+					if (a instanceof CallComponentAction) {
+						[% if (component.isTriggerOf.isDefined()) { %]
+						((CallComponentAction)a).setCalledComponent(trigger);
+						[% } %]
+					} else if (a instanceof UseComponentResultAction) {
+						[% if (component.isTriggerOf.isDefined()) { %]
+						((UseComponentResultAction)a).setCalledComponent(trigger);
+						((UseComponentResultAction)a).setResult(result);
+						[% } %]
+					}
+					a.execute();
+					if (a instanceof CallComponentAction) {
+						if (a.getProperties().containsKey("resultType")) {
+							Log.i(TAG, "Saving result.");
+							result = new HashMap<String, Object>();
+							result.put("resultType", (String)a.getProperties().get("resultType"));
+							result.put("result", a.getProperties().get("result"));
+						}
+					}
+				}
+				[% if (component.continuous) { %]
+				setupTimer();
+				[% } %]
 			}
-			setup[%= component %]();
-		}
 
-		@Override
-		public void onTick(long millisUntilFinished) {
-			Toast.makeText(getBaseContext(), "Tick.", Toast.LENGTH_SHORT).show();
-		}
-		
-	}.start();
+			@Override
+			public void onTick(long millisUntilFinished) {
+				Toast.makeText(parent.getBaseContext(), "Tick.", Toast.LENGTH_SHORT).show();
+			}
+			
+		}.start();
+	}
 }

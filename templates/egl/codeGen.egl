@@ -1,0 +1,82 @@
+[%
+	var application : Application := Application.allInstances().first();
+	var server : Server := Server.allInstances().first();
+	var basePath : String := URI+DIR+"templates/egl/";
+	var compPath : String := URI+DIR+"components/templates/";
+	var codePath : String := URI+DIR+"output/"+application.name+"/";
+
+	var s : Template := TemplateFactory.load(basePath+'genServer.egl');
+	if (server.isDefined() and server.session.isDefined()) {
+		s.populate('server', server);
+		s.populate('basePath',    basePath);
+		s.populate('compPath',    compPath);
+		s.process();
+		s.generate(codePath+'main.js');
+	}
+
+	// generate Android Manifest
+	var t : Template := TemplateFactory.load(basePath+'genManifest.egl');
+	if (application.manifest.isDefined()) {
+		t.populate('manifest', application.manifest);
+		t.populate('application', application);
+		t.populate('basePath',    basePath);
+		t.populate('compPath',    compPath);
+		t.process();
+		t.generate(codePath+'AndroidManifest.xml');
+	}
+
+	var path : String := '';
+	for (p : String in application.manifest.package.split("\\.")) {
+		path = path.concat(p + '/');
+	}
+
+	// generate main Android app
+	t := TemplateFactory.load(basePath+'genActivity.egl');
+	if (application.activities.isDefined() and application.activities.size() > 0) {
+		for (activity in application.activities) {
+			t.populate('activity', activity);
+			t.populate('application', application);
+			t.populate('path', path);
+			t.populate('basePath',    basePath);
+			t.populate('compPath',    compPath);
+			t.populate('codePath',	  codePath);
+			t.process();
+			t.generate(codePath + 'src/' + path + activity.name + '.java');
+
+			var l : Template := TemplateFactory.load(basePath+'genDependency.egl');
+			if (activity.content.isDefined() and activity.content.size() > 0) {
+				for (c in activity.content) {
+					if (c.dependencies.isDefined() and c.dependencies.size() > 0) {
+						for (d in c.dependencies) {
+							l.populate('dependency', d);
+							l.populate('basePath',    basePath);
+							l.populate('compPath',    compPath);
+							l.process();
+							l.generate(codePath + 'src/' + path + d.name + '.java');
+						}
+					}
+				}
+			}
+		}
+	}
+
+	// generate Android layout
+	t := TemplateFactory.load(basePath+'genLayout.egl');
+	if (application.activities.isDefined() and application.activities.size() > 0) { 
+		for (activity in application.activities) {
+			if (activity.presentation.isDefined()) {
+				t.populate('layout', activity.presentation.layout);
+				t.populate('application', application);
+				t.populate('basePath',    basePath);
+				t.populate('compPath',    compPath);
+				t.process();
+				t.generate(codePath+'res/layout/' + activity.presentation.layout.name + '.xml');	
+			}
+		}
+	}
+
+	t := TemplateFactory.load(basePath+'genStrings.egl');
+	t.populate('name', application.name);
+	t.process();
+	t.generate(codePath+'res/values/strings.xml');
+%]

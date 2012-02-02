@@ -1,0 +1,11 @@
+load "Component"
+load "Session"
+
+ServerComponent dropboxComponent imports Session {
+	
+	SComp dropbox {
+		ip = "127.0.0.1";
+		session 	: Session;
+	}
+	
+}

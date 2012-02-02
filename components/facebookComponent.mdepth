@@ -1,0 +1,13 @@
+load "AndroidComponent"
+
+AndroidComponent facebookComponent {
+	
+	AComp Facebook {
+		package = "be.pds.facebook";
+		gencodetemplate = "facebook.egl";
+		ctype = "facebook";
+
+
+	}
+
+}

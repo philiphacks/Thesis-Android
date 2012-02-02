@@ -7,33 +7,31 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.telephony.SmsManager;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+import android.util.Log;
+import java.util.HashMap;
 
-public class SMSComponent {
+import be.pds.thesis.*;
 
-	private Activity parent;
+public class SMSComponent extends AndroidComponent {
+
 	private final String TAG = getClass().getName();
 	private EditText editPhoneNr;
 	private EditText editMessage;
 	private Button sendMessage;
-	private GeoComponent trigger;
+	private AndroidComponent trigger;
 
-	public void setTrigger(GeoComponent geo) {
-		this.trigger = geo;
-	}
-
-	public void action(String phone, String msg) {
-		sendSMS(phone, msg);
+	public void setTrigger(AndroidComponent comp) {
+		this.trigger = comp;
 	}
 
 	public SMSComponent(Activity a) {
-		this.parent = a;
-		editPhoneNr = (EditText) findViewById(R.id.txtPhoneNo);
-		editMessage = (EditText) findViewById(R.id.txtMessage);
-		sendMessage = (Button) findViewById(R.id.btnSendSMS);
+		super(a);
+		editPhoneNr = (EditText) this.parent.findViewById(R.id.txtPhoneNo);
+		editMessage = (EditText) this.parent.findViewById(R.id.txtMessage);
+		sendMessage = (Button) this.parent.findViewById(R.id.btnSendSMS);
 		setupSMS();
 	}
 
@@ -47,6 +45,11 @@ public class SMSComponent {
 		return sendMessage;
 	}
 
+	public void action(HashMap<String, Object> properties) {
+		Log.i(TAG, "[SMSComponent] sending SMS...");
+		sendSMS((String)properties.get("phoneNr"), (String)properties.get("message"));
+	}
+
 	private void setupSMS() {
 				// Found a trigger.. it is a Geo Component
 				// We should probably send an SMS with the Geo data.
@@ -57,39 +60,39 @@ public class SMSComponent {
 		String SENT = "SMS_SENT";
 		String DELIVERED = "SMS_DELIVERED";
 
-		PendingIntent sentPI = PendingIntent.getBroadcast(this, 0,
+		PendingIntent sentPI = PendingIntent.getBroadcast(this.parent, 0,
 				new Intent(SENT), 0);
-		PendingIntent deliveredPI = PendingIntent.getBroadcast(this, 0,
+		PendingIntent deliveredPI = PendingIntent.getBroadcast(this.parent, 0,
 				new Intent(DELIVERED), 0);
 
 		//---when the SMS has been sent---
-		registerReceiver(new BroadcastReceiver() {
+		this.parent.registerReceiver(new BroadcastReceiver() {
 
 			@Override
 			public void onReceive(Context arg0, Intent arg1) {
 				switch (getResultCode()) {
 					case Activity.RESULT_OK:
-						Toast.makeText(getBaseContext(), "SMS sent",
+						Toast.makeText(parent.getBaseContext(), "SMS sent",
 								Toast.LENGTH_SHORT).show();
 						break;
 					case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
-						Toast.makeText(getBaseContext(), "Generic failure", 
+						Toast.makeText(parent.getBaseContext(), "Generic failure", 
 								Toast.LENGTH_SHORT).show();
 					    break;
 					case SmsManager.RESULT_ERROR_NO_SERVICE:
-						Toast.makeText(getBaseContext(), "No service", 
+						Toast.makeText(parent.getBaseContext(), "No service", 
 					    		Toast.LENGTH_SHORT).show();
 					    break;
 					case SmsManager.RESULT_ERROR_NULL_PDU:
-						Toast.makeText(getBaseContext(), "Null PDU", 
+						Toast.makeText(parent.getBaseContext(), "Null PDU", 
 								Toast.LENGTH_SHORT).show();
 					    break;
 					case SmsManager.RESULT_ERROR_RADIO_OFF:
-						Toast.makeText(getBaseContext(), "Radio off", 
+						Toast.makeText(parent.getBaseContext(), "Radio off", 
 								Toast.LENGTH_SHORT).show();
 					    break;
 					default:
-						Toast.makeText(getBaseContext(), "Fail.", 
+						Toast.makeText(parent.getBaseContext(), "Fail.", 
 								Toast.LENGTH_SHORT).show();
 						break;
 				}
@@ -98,17 +101,17 @@ public class SMSComponent {
 		}, new IntentFilter(SENT));
 
 		//---when the SMS has been delivered---
-		registerReceiver(new BroadcastReceiver() {
+		this.parent.registerReceiver(new BroadcastReceiver() {
 
 			@Override
 			public void onReceive(Context context, Intent intent) {
 				switch (getResultCode()) {
 					case Activity.RESULT_OK:
-						Toast.makeText(getBaseContext(), "SMS delivered",
+						Toast.makeText(parent.getBaseContext(), "SMS delivered",
 								Toast.LENGTH_SHORT).show();
 						break;
 					case Activity.RESULT_CANCELED:
-						Toast.makeText(getBaseContext(), "SMS not delivered",
+						Toast.makeText(parent.getBaseContext(), "SMS not delivered",
 								Toast.LENGTH_SHORT).show();
 						break;
 				}

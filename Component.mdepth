@@ -8,7 +8,7 @@ Model Component@2 {
 		name			: String;
 	}
 
-	Node Data@1 {
+	Node ComponentData@1 {
 		name 		: String;
 		value 		: String;
 	}
@@ -28,4 +28,5 @@ Model Component@2 {
 		gencodetemplate : String;
 		package 		: String;
 	}
+
 }

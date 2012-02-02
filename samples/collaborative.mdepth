@@ -2,6 +2,7 @@ load "Application"
 load "Server"
 load "ServerProperty"
 load "components/GlueComponents"
+load "components/chatComponent"
 
 // MANIFEST ------------------------------------------------------------------
 
@@ -110,41 +111,6 @@ Presentation TestPresentation {
 	}
 }
 
-// SERVER ---------------------------------------------------------------------
-
-Session mySession {
-	SessionObject sessionObj {
-		users = [u1, u2];
-	}
-
-	User u1 {
-		first_name = "Philip";
-		last_name = "De Smedt";
-		username = "phil";
-		password = "foobar";
-		role = admin;
-	}
-
-	User u2 {
-		first_name = "Juan";
-		last_name = "de Lara";
-		username = "juan";
-		password = "foobar2";
-		role = admin;
-	}
-
-	Role admin {
-		name = "admin";
-	}
-}
-
-Server myServer imports mySession {
-	session = sessionObj;
-	host = "localhost";
-	port = 80;
-	components = [chatComponent];
-}
-
 // ACTIONS AND DATA -----------------------------------------------------------
 
 AndroidAction TestActions imports TestPresentation {
@@ -190,6 +156,44 @@ GlueComponent myComp imports TestActions {
 		port = 80;	
 	}
 
+}
+
+// SERVER ---------------------------------------------------------------------
+
+Session mySession {
+	SessionObject sessionObj {
+		users = [u1, u2];
+	}
+
+	User u1 {
+		first_name = "Philip";
+		last_name = "De Smedt";
+		username = "phil";
+		password = "foobar";
+		role = admin;
+	}
+
+	User u2 {
+		first_name = "Juan";
+		last_name = "de Lara";
+		username = "juan";
+		password = "foobar2";
+		role = admin;
+	}
+
+	Role admin {
+		name = "admin";
+	}
+}
+
+Server myServer imports mySession, myComp {
+
+	Server s {
+		session = sessionObj;
+		host = "localhost";
+		port = 80;
+		components = [];//chat];	
+	}
 }
 
 // ACTIVITIES -----------------------------------------------------------------

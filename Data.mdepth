@@ -1,0 +1,20 @@
+load "Component"
+
+Model Data imports Component {
+	
+	abstract Node Data {
+		name 		: String;
+		datatype 	: String;
+	}
+
+	Node RawData : Data {
+		value 		: String;
+	}
+
+	// Gives ERROR
+	// :: invalid creation of element ComponentData in context Data
+	//Node ComponentData : Data {
+	//	value 		: Component@0;
+	//}
+
+}

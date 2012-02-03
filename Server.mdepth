@@ -4,6 +4,7 @@ load "ServerComponent"
 Model Server imports Session, ServerComponent {
 
 	Node Server {
+		name 			: String;
 		session 		: SessionObject;
 		host 			: String;
 		port 			: int;

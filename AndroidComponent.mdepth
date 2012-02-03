@@ -1,8 +1,8 @@
 load "Component"
 load "AndroidAction"
-load "ActionList"
+load "UIAction"
 
-Model AndroidComponent@2 imports Component, AndroidAction, ActionList {
+Model AndroidComponent@2 imports Component, AndroidAction, UIAction {
 
 	// Android component for semantics and extensibility
 	Node AComp : Component {
@@ -20,7 +20,7 @@ Model AndroidComponent@2 imports Component, AndroidAction, ActionList {
 		dependencies@1 			: DependencyComponent[*];
 
 		properties@1 			: ComponentData[*];
-		actions 				: ActionList[*];
+		actions 				: UIAction[*];
 	}
 
 	Edge Trigger@(2)(AComp.trigger, AComp.isTriggerOf) {

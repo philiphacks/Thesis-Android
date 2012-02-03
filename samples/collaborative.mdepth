@@ -113,7 +113,15 @@ Presentation TestPresentation {
 
 // ACTIONS AND DATA -----------------------------------------------------------
 
-AndroidAction TestActions imports TestPresentation {
+Data TestData imports TestPresentation {
+	RawData passData {
+		name = "user";
+		value = "phil";//usernameText;
+		datatype = "EditText";
+	}
+}
+
+AndroidAction TestActions imports TestData {
 
 	LoginProperty lp {
 		return = false;	
@@ -130,17 +138,12 @@ AndroidAction TestActions imports TestPresentation {
 		condition = [csp];
 	}
 
-	Data passData {
-		name = "user";
-		value = "phil"; //usernameText.text;
-		datatype = "String";
-	}
 }
 
-// TRIGGERS ------------------------------------------------------------------
+// UI ACTIONS ------------------------------------------------------------------
 
-ActionList TestActionList imports TestActions, TestPresentation {
-	ActionList triggerLogin {
+UIAction TestUIAction imports TestActions, TestPresentation {
+	UIAction triggerLogin {
 		target = loginButton;
 		// Sequentially specify which actions you want to execute
 		actions = [toMainAct];
@@ -189,11 +192,13 @@ Session mySession {
 Server myServer imports mySession, myComp {
 
 	Server s {
+		name = "collaborative";
 		session = sessionObj;
 		host = "localhost";
 		port = 80;
-		components = [];//chat];	
+		components = [];//[chat];	
 	}
+
 }
 
 // ACTIVITIES -----------------------------------------------------------------
@@ -215,7 +220,7 @@ Activity TestActivity imports myComp, TestPresentation {
 // APPLICATION ----------------------------------------------------------------
 
 Application myApp imports TestManifest, TestActivity {
-	name = "CollaborativeKnowledgePlatform";
+	name = "collaborative";
 	manifest = manDesc;
 	activities = [act1, act2];
 }

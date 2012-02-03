@@ -10,6 +10,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.EditText;
 
 public class [%= activity.name %] extends Activity {
 
@@ -28,33 +29,58 @@ public class [%= activity.name %] extends Activity {
         [% for (c in activity.content) { %]
 			[%= c %] = new [%= c.type %]Component(this);
     	[% } %]
-    	[% if (activity.content.size() == 0) { %]
-    		[% for (c in activity.presentation.layout.layoutDesc.components) { %]
-    			[%= c.type %] [%= c %] = ([%= c.type %]) this.findViewById(R.id.[%= c.layoutID %]);
-    		[% } %]
-    	[% } %]
+		[% for (c in activity.presentation.layout.layoutDesc.components) { %]
+			[%= c.type %] [%= c %] = ([%= c.type %]) this.findViewById(R.id.[%= c.layoutID %]);
+		[% } %]
 
-    	[% for (t in Trigger.all) { %]
-    		[%= t.trigger %].setTrigger([%= t.isTriggerOf %]);
-    		[%= t.isTriggerOf %].isTriggerOf([%= t.trigger %]);
+    	[% if (Trigger.isDefined()) { %]
+	    	[% for (t in Trigger.all) { %]
+				[%= t.trigger %].setTrigger([%= t.isTriggerOf %]);
+				[%= t.isTriggerOf %].isTriggerOf([%= t.trigger %]);
 
-			[% if (t.actions.isDefined() and t.actions.size() > 0) { %]
-				HashMap<String, Object> properties = new HashMap<String, Object>();
-				[% for (action in t.actions) { %]
-					[% if (action.isTypeOf(CallComponentAction)) { %]
-					[% for (p in action.properties) { %]
-						[%= p.datatype %] [%= p.name %] = "[%= p.value %]";
-						properties.put("[%= p.name %]", [%= p.name %]);
+				[% if (t.actions.isDefined() and t.actions.size() > 0) { %]
+					HashMap<String, Object> properties = new HashMap<String, Object>();
+					[% for (action in t.actions) { %]
+						[% if (action.isTypeOf(CallComponentAction)) { %]
+						[% for (p in action.properties) { %]
+							[%= p.datatype %] [%= p.name %] = "[%= p.value %]";
+							properties.put("[%= p.name %]", [%= p.name %]);
+						[% } %]
+						[% } %]
+						[%= action.type %] [%= action %] = new [%= action.type %](properties);
+						[%= t.trigger %].addAction([%= action %]);
 					[% } %]
-					[% } %]
-					[%= action.type %] [%= action %] = new [%= action.type %](properties);
-					[%= t.trigger %].addAction([%= action %]);
 				[% } %]
 			[% } %]
 		[% } %]
 
-		[% if (GlueComponent.allInstances().first().actions.isDefined()) { %]
-			// We found actions in the gluecomponent
+		[% if (UIAction.all.size() > 0) { %]
+			hello
+			[% for (a in UIAction.all) { %]
+				jup
+				[% if (a.target.isTypeOf(Button)) { %]
+					final [%= activity.name %] parent = this;
+					[%= a.target %].setOnClickListener(new View.OnClickListener() {
+						@Override
+						public void onClick(View v) {
+[% for (action in a.actions) { %]
+	HashMap<String, Object> properties = new HashMap<String, Object>();
+	properties.put("class", "[%= application.manifest.package %].[%= action.newActivity %]");
+	[% if (action.data.isDefined() and action.data.size() > 0) { %]
+	HashMap<String, String> data = new HashMap<String, String>();
+	[% for (d in action.data) { %]
+	data.put("[%= d.name %]", (String)"[%= d.value %]");
+	[% } %]
+	properties.put("data", data);
+	[% } %]
+	ChangeActivityAction caa = new ChangeActivityAction(properties);
+	caa.setCallingActivity(parent);
+	caa.execute();
+[% } %]
+						}
+					});
+				[% } %]
+			[% } %]
 		[% } %]
     }
 

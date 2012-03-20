@@ -20,11 +20,18 @@ Model AndroidComponent@2 imports Component, AndroidAction, UIAction {
 		dependencies@1 			: DependencyComponent[*];
 
 		properties@1 			: ComponentData[*];
-		actions 				: UIAction[*];
+		
+		// actions extend the action() method, so users can extend a component's functionality
+		actions 				: Action[*];
+		// uiactions are actions on a layoutcomponent
+		uiactions 				: UIAction[*];
 	}
 
 	Edge Trigger@(2)(AComp.trigger, AComp.isTriggerOf) {
 		actions 				: Action[*];
 	}
 
+	Node SComp : AComp {
+		childActivity	: String;
+	}
 }

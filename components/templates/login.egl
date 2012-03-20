@@ -1,8 +1,13 @@
 [% out.setContentType('Java'); %]
 package [%= package %];
 
+import android.view.View;
+
 import android.app.Activity;
 import android.widget.Toast;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Button;
 import android.util.Log;
 import java.util.HashMap;
 
@@ -12,6 +17,7 @@ public class LoginComponent extends AndroidComponent {
 
 	private final String TAG = getClass().getName();
 	private HashMap<String, Object> result;
+	private HashMap<String, Object> properties;
 	[% if (component.trigger.isDefined()) { %]
 	private AndroidComponent isTriggerOf;
 
@@ -35,18 +41,72 @@ public class LoginComponent extends AndroidComponent {
 
 	public LoginComponent(Activity a) {
 		super(a);
+		properties = new HashMap<String, Object>();
 		[% if (component.layoutcomponents.isDefined() and component.layoutcomponents.size() > 0) { %]
 		[% for (c in component.layoutcomponents) { %]
-	    [%= c %] = ([%= c.type %]) findViewById(R.id.[%= c.layoutID %]);
+	    [%= c %] = ([%= c.type %]) parent.findViewById(R.id.[%= c.layoutID %]);
 	    [% } %]
 	    [% } %]
+
+	    [% if (component.uiactions.isDefined() and component.uiactions.size() > 0) { %]
+			[% for (a in component.uiactions) { %]
+				[% if (a.target.isTypeOf(Button)) { %]
+					final Activity parentAct = parent;
+					final HashMap<String, Object> props = properties;
+					[%= a.target %].setOnClickListener(new View.OnClickListener() {
+						@Override
+						public void onClick(View v) {
+[% for (action in a.actions) { %]
+	[% if (action.isTypeOf(CallComponentAction)) { %]
+		action(props);
+	[% } else if (action.isTypeOf(ChangeActivityAction)) { %]
+
+		properties.put("class", "[%= package %].[%= action.newActivity %]");
+		[% if (action.data.isDefined() and action.data.size() > 0) { %]
+			HashMap<String, String> data = new HashMap<String, String>();
+			[% for (d in action.data) { %]
+				[% if (d.isTypeOf(RawData)) { %]
+					data.put("[%= d.name %]", (String)"[%= d.value %]");
+				[% } else if (d.isTypeOf(CompData)) { %]
+					data.put("[%= d.name %]", (String)[%= d.comp %].getText());
+				[% } %]
+				properties.put("data", data);
+			[% } %]
+			[% if (action.condition.isDefined() and action.condition.size() > 0) { %]
+				[% for (c in action.condition) { %]
+					[% if (c.isTypeOf(CheckServerProperty)) { %]
+					if (ServerConnection.getInstance().checkServerProperty("[%= c.property.type %]")) {
+						ChangeActivityAction caa = new ChangeActivityAction(properties);
+						caa.setCallingActivity(parentAct);
+						caa.execute();
+					}
+					[% } %]
+				[% } %]
+			[% } %]
+		[% } %]
+	[% } %]
+[% } %]
+						}
+					});
+				[% } %]
+			[% } %]
+		[% } %]
 	}
 
 	public void action(HashMap<String, Object> properties) {
+		[% if (component.actions.isDefined() and component.actions.size() > 0) { %]
+			[% for (a in component.actions) { %]
+				[% if (a.isTypeOf(ExtractLayoutAction)) { %]
+					// TODO: make a class out of this?
+					properties.put("[%= a.name %]", [%= a.source %].getText().toString());
+				[% } %]
+			[% } %]
+		[% } %]
 		login();
 	}
 
 	private void login() {
-		
+		String msg = "{\"auth\" : { \"user\" : \"" + properties.get("username") + "\", \"pass\" : \"" + properties.get("password") + "\" } }";
+		ServerConnection.getInstance().sendMessage(msg);
 	}
 }

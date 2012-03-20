@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:orientation="vertical"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	>
+
+			<ScrollView
+				android:id="@+id/scrollChat"
+				android:layout_width="fill_parent"
+				android:layout_height="0dip"
+				android:text=""
+				android:gravity=""
+			/>
+			<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+				android:orientation="horizontal"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				>
+
+					<EditText
+						android:id="@+id/textInput"
+						android:layout_width="0dip"
+						android:layout_height="45dp"
+						android:text=""
+						android:gravity=""
+					/>
+					<Button
+						android:id="@+id/sendButton"
+						android:layout_width="125dp"
+						android:layout_height="45dp"
+						android:text="Send"
+						android:gravity=""
+					/>
+				
+			</LinearLayout>
+	
+</LinearLayout>

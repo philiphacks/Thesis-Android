@@ -1,8 +1,10 @@
 load "Manifest"
 load "Activity"
+load "Server"
 
-Model Application imports Activity, Manifest {
+Model Application imports Activity, Manifest, Server {
 	name			: String;
 	manifest		: ManifestDescription[1];
 	activities		: Activity[*];
+	server 			: Server[1];
 }

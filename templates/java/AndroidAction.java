@@ -3,7 +3,7 @@ package be.pds.thesis;
 import java.util.HashMap;
 
 public abstract class AndroidAction {
-	
+
 	protected HashMap<String, Object> properties;
 
 	public AndroidAction() {

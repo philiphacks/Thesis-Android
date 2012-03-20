@@ -16,6 +16,25 @@
 				<activity android:name=".MainActivity"
 						  android:label="@string/app_name">
 				</activity>
+				<activity android:name=".ChatActivity"
+						  android:label="@string/app_name">
+				</activity>
+				<activity android:name=".DropboxActivity"
+						  android:label="@string/app_name">
+				</activity>
+				<activity android:name=".DropboxItemActivity"
+						  android:label="@string/app_name">
+				</activity>
+				<activity android:name=".ListActivity"
+						  android:label="@string/app_name">
+				</activity>
+				<activity android:name=".ListChildActivity"
+						  android:label="@string/app_name">
+				</activity>
+				<activity android:name=".PrepareRequestTokenActivity"
+						  android:label="@string/app_name">
+				</activity>
 		</application>
 
+        <uses-permission android:name="android.permission.INTERNET"/>
 </manifest>

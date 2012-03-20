@@ -13,13 +13,23 @@ Model Component@2 {
 		value 		: String;
 	}
 
+	Node Layout : Component {
+		layoutID		: String;
+		text 			: String;
+		gravity			: String;
+
+		paddingLeft 	: String;
+		paddingRight	: String;
+		paddingTop 		: String;
+		paddingBottom 	: String;
+		baselineAligned : String;
+	}
+
 	// e.g. Button, EditText, TextView, ...
-	Node LayoutComponent@2 : Component {
-		layoutID	: String;
-		width		: String;
-		height		: String;
-		text		: String;
-		gravity		: String;
+	Node LayoutComponent@2 : Layout {
+		width			: String;
+		height			: String;
+		weight			: String;
 	}
 
 	// Component for regular Java classes that have a dependency with an Android component/activity

@@ -1,18 +1,17 @@
 [% out.setContentType('Java'); %]
-
-[%
-	var temp : Template := TemplateFactory.load(compPath+'preparerequesttoken.egl');
-	temp.populate('refActivity', name);
-	temp.populate('package', package);
-	temp.populate('basePath', basePath);
-	temp.populate('compPath', compPath);
-	temp.process();
-%]
-[%
-	temp.generate(codePath+'src/' + 'PrepareRequestTokenActivity.java');
-%]
-
 package [%= package %];
+
+[%
+	// generate new childActivity class
+	var l : Template := TemplateFactory.load(compPath+'preparerequesttoken.egl');
+	l.populate('package', package);
+	l.populate('refActivity', name);
+	l.populate('basePath', basePath);
+	l.populate('compPath', compPath);
+	l.populate('codePath', codePath);
+	l.process();
+	l.generate(codePath+'src/' + path + 'PrepareRequestTokenActivity.java');
+%]
 
 public class TwitterComponent extends AndroidComponent {
 
@@ -51,6 +50,11 @@ public class TwitterComponent extends AndroidComponent {
 			Toast.makeText(this.parent.getBaseContext(), "Tweet sent !", Toast.LENGTH_LONG).show();
 		}
 	};
+
+	@Override
+	public void action(HashMap<String, Object> properties) {
+		authAndTweet();
+	}
 		
 	private void authAndTweet() {
 		if (TwitterUtils.isAuthenticated(prefs)) {
@@ -65,6 +69,9 @@ public class TwitterComponent extends AndroidComponent {
 	private void sendTweet() {
 		sendTweet(tweetText.getText().toString());
 	}
+
+	@Override
+	public void onMessage(String message) { }
 
 	private void sendTweet(final String tweet) {
 		Thread t = new Thread() {

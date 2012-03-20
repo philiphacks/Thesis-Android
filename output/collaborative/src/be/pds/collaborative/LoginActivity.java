@@ -20,15 +20,16 @@ public class LoginActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        ServerConnection.getInstance().setHost("10.0.2.2");
+        ServerConnection.getInstance().setPort("3000");
+        ServerConnection.getInstance().connect();
         setContentView(R.layout.login);
-
 			login = new LoginComponent(this);
 			TextView usernameView = (TextView) this.findViewById(R.id.usernameView);
 			EditText usernameText = (EditText) this.findViewById(R.id.usernameText);
 			TextView passwordView = (TextView) this.findViewById(R.id.passwordView);
 			EditText passwordText = (EditText) this.findViewById(R.id.passwordText);
 			Button loginButton = (Button) this.findViewById(R.id.loginButton);
-
 
     }
 

@@ -30,5 +30,7 @@ public abstract class AndroidComponent {
 	}
 
 	abstract public void action(HashMap<String, Object> properties);
+	
+	abstract public void onMessage(final String message);
 }
 

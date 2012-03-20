@@ -1,0 +1,34 @@
+var app = require('./main');
+
+exports.distributeMessage = function (msg, connections) {
+	new app.Message({text: msg.message, user: msg.user, date: new Date()}).save(function(err) {
+		if (err) {
+			console.log(err);
+			console.log('couldn\'t save message');
+		} else {
+			var m = {};
+			m['message'] = {};
+			m['message']['type'] = "chat";
+			m['message']['user'] = msg.user;
+			m['message']['message'] = msg.message;
+			console.log('sending message ' + JSON.stringify(m));
+			for (var i = connections.length - 1; i >= 0; i--) {
+				connections[i]['connection'].send(JSON.stringify(m));
+			}
+		}
+	});
+}
+
+exports.getLastMessages = function(connection) {
+	app.Message.find({}, [], {limit:50} ,function (err, msgs) {
+		for (var i = 0; i < msgs.length; i++) {
+			var msg = {};
+			msg['message'] = {};
+			msg['message']['type'] = "chat";
+			msg['message']['user'] = msgs[i].user;
+			msg['message']['message'] = msgs[i].text;
+			//console.log('sending message ' + JSON.stringify(msg));
+			connection['connection'].send(JSON.stringify(msg));
+		}
+	});
+}

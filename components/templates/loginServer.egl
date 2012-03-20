@@ -1,0 +1,36 @@
+
+exports.authenticate = function (info, connections, connection, fn) {
+	if (info['user'] == 'phil' && info['pass'] == 'foobar') {
+		console.log('Authenticated user!');
+		fn(connection, connections, info['user'], null);
+	} else if (info['user'] == 'juan' && info['pass'] == 'foobar') {
+		console.log('Authenticated user!');
+		fn(connection, connections, info['user'], null);
+	} else {
+		fn(connection, connections, null, 'Wrong username/password');
+	}
+}
+
+exports.getConnectedUsers = function (connections, connection) {
+	for (var i = connections.length - 1; i >= 0; i--) {
+		if (connections[i]['enabled'] == 'true') {
+			var m = {};
+			m['message'] = {};
+			m['message']['type'] = "users";
+			m['message']['message'] = connections[i].user;
+			connection['connection'].send(JSON.stringify(m));
+		}
+	}
+}
+
+exports.newConnectedUser = function (connections, connection) {
+	for (var i = connections.length - 1; i >= 0; i--) {
+		//if (connections[i]['connection'] != connection['connection']) {
+			var m = {};
+			m['message'] = {};
+			m['message']['type'] = "users";
+			m['message']['message'] = connection.user;
+			connections[i]['connection'].send(JSON.stringify(m));
+		//}
+	}
+}

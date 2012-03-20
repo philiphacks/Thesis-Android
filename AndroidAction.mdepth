@@ -1,9 +1,8 @@
 load "Component"
-load "Activity"
 load "ServerProperty"
 load "Data"
 
-Model AndroidAction imports Component, Activity, ServerProperty, Data {
+Model AndroidAction imports Component, ServerProperty, Data {
 	
 	abstract Node Action {
 		ctype			: String{id};

@@ -1,0 +1,30 @@
+var app = require('./main');
+
+exports.addDropboxNote = function (note, connections) {
+	new app.DropboxNote({file: note.file, text: note.text, user: note.user, date: new Date()}).save(function(err) {
+		if (err) {
+			console.log(err);
+			console.log('couldn\'t save note');
+		} else {
+			for (var i = connections.length - 1; i >= 0; i--) {
+				//connections[i]['connection'].send(note.user + ": " + msg.text)
+			}
+			console.log(note.user + ' is creating note "' + note.text + '"');
+		}
+	});
+}
+
+exports.getDropboxNotes = function (note, connection) {
+	app.DropboxNote.find({file: note.file}, function (err, notes) {
+		for (var i = 0; i < notes.length; i++) {
+			var no = {};
+			no['message'] = {};
+			no['message']['type'] = "dropbox";
+			no['message']['file'] = note.file;
+			no['message']['user'] = notes[i].user;
+			no['message']['message'] = notes[i].text;
+			console.log(JSON.stringify(no));
+			connection['connection'].send(JSON.stringify(no));
+		}
+	});
+}

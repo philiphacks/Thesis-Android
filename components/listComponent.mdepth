@@ -1,0 +1,10 @@
+load "Component"
+
+AndroidComponent listComponent {
+	
+	SComp List {
+		ctype = "list";
+		gencodetemplate = "list.egl";
+	}
+
+}

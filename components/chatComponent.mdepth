@@ -1,10 +1,7 @@
 load "Component"
-load "Session"
 
-ServerComponent chatComponent imports Session {
+AndroidComponent chatComponent {
 	
-	SComp Chat {
-		//database		: String; //MySQLConnection;
-	}
+	SComp Chat { }
 	
 }

@@ -1,11 +1,14 @@
 load "Component"
-load "Session"
 
-ServerComponent dropboxComponent imports Session {
+AndroidComponent dropboxComponent {
 	
-	SComp dropbox {
-		ip = "127.0.0.1";
-		session 	: Session;
+	SComp Dropbox {
+		ctype = "dropbox";
+		gencodetemplate = "dropbox.egl";
+
+		folder 		: String;
+		key 		: String;
+		secret 		: String;
 	}
-	
+
 }

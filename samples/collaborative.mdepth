@@ -1,8 +1,8 @@
 load "Application"
 load "Server"
 load "ServerProperty"
+load "Template"
 load "components/GlueComponents"
-load "components/chatComponent"
 
 // MANIFEST ------------------------------------------------------------------
 
@@ -11,11 +11,11 @@ Manifest TestManifest {
 		package = "be.pds.collaborative";
 		sdk = "8";
 		app_info = info;
-		permissions = [];
+		permissions = [p1];
 	}
 
 	AppInfo info {
-		activities = [a1, a2];
+		activities = [a1, a2, a3, a4, a5, a6, a7, a8];
 	}
 
 	Activity a1 {
@@ -27,78 +27,143 @@ Manifest TestManifest {
 		name = ".MainActivity";
 	}
 
+	Activity a3 {
+		name = ".ChatActivity";
+	}
+
+	Activity a4 {
+		name = ".DropboxActivity";
+	}
+
+	Activity a5 {
+		name = ".DropboxItemActivity";
+	}
+
+	Activity a6 {
+		name = ".ListActivity";
+	}
+
+	Activity a7 {
+		name = ".ListChildActivity";
+	}
+
+	Activity a8 {
+		name = ".PrepareRequestTokenActivity";
+	}
+
+	Permission p1 {
+		name = "android.permission.INTERNET";
+	}
+
 	IntentFilter i { }
 }
 
 // PRESENTATION --------------------------------------------------------------
 
-Presentation TestPresentation {
+Presentation TestPresentation imports DropboxLayout, ChatLayout, LoginLayout, GenericListLayout {
 
-	Layout l1 {
+	LayoutDesc l1 {
 		name = "login";
-		layoutDesc = ld1;
+		layoutType = loginLayout;
 	}
 
-	Layout l2 {
+	LayoutDesc l2 {
 		name = "main";
-		layoutDesc = ld2;
+		layoutType = mainLayout;
 	}
 
-	LayoutDescription ld1 {
-		type = layoutType;
-		components = [usernameView, usernameText, passwordView, passwordText, loginButton];
+	LayoutDesc l3 {
+		name = "chat";
+		layoutType = chatLayout;
 	}
 
-	LayoutDescription ld2 {
-		type = layoutType;
-		components = [inActTwo];
+	LayoutDesc l4 {
+		name = "dropbox";
+		layoutType = dropboxLayout;
 	}
 
-	LayoutType layoutType {
+	LayoutDesc l4b {
+		name = "dropboxItem";
+		layoutType = dropboxItemLayout;
+	}
+
+	LayoutDesc l5 {
+		name = "note";
+		layoutType = listLayout;
+	}
+
+	LayoutDesc l5b {
+		name = "item";
+		layoutType = listItemLayout;
+	}
+
+	// MAIN LAYOUT ------------------------------------------------------------
+
+	LayoutType mainLayout {
 		name = "LinearLayout";
 		orientation = "vertical";
+
+		children = [welcomeMsgView, chatButton, documentsButton, listButton, tweetButton,
+			logoutButton, connectedUsersTextView, connectedUsersView];
 	}
 
-	TextView usernameView {
-		layoutID = "usernameView";
+	TextView welcomeMsgView {
+		layoutID = "welcomeMsg";
 		width = "fill_parent";
 		height = "wrap_content";
-		text = "Username";
+		text = "Welcome to the collaborative application!";
 	}
 
-	EditText usernameText {
-		layoutID = "usernameText";
-		width = "fill_parent";
-		height = "wrap_content";
-	}
-
-	TextView passwordView {
-		layoutID = "passwordView";
-		width = "fill_parent";
-		height = "wrap_content";
-		text = "Password";
-	}
-
-	EditText passwordText {
-		layoutID = "passwordText";
-		width = "fill_parent";
-		height = "wrap_content";
-		password = "true";
-	}
-
-	Button loginButton {
-		layoutID = "loginButton";
+	Button chatButton {
+		layoutID = "chatButton";
 		width = "wrap_content";
 		height = "wrap_content";
-		text = "Login!";
+		text = "Chat";
 	}
 
-	TextView inActTwo {
-		layoutID = "inActTwo";
-		width = "fill_parent";
+	Button documentsButton {
+		layoutID = "documentsButton";
+		width = "wrap_content";
 		height = "wrap_content";
-		text = "You're in activity two!";
+		text = "Documents";
 	}
+
+	Button listButton {
+		layoutID = "listButton";
+		width = "wrap_content";
+		height = "wrap_content";
+		text = "Goals";
+	}
+
+	Button tweetButton {
+		layoutID = "tweetButton";
+		width = "wrap_content";
+		height = "wrap_content";
+		text = "Tweet";
+	}
+
+	Button logoutButton {
+		layoutID = "logoutButton";
+		width = "wrap_content";
+		height = "wrap_content";
+		text = "Chat";
+	}
+
+	TextView connectedUsersTextView {
+		layoutID = "connectedUsersText";
+		width="fill_parent";
+		height="wrap_content";
+		text="Connected Users";
+	}
+
+	TextView connectedUsersView {
+		layoutID = "connectedUsers";
+		width="fill_parent";
+		height="wrap_content";
+		text="";
+	}
+
+	// PRESENTATIONS ------------------------------------------------------------
 
 	Presentation pres1 {
 		activityname = "LoginActivity";
@@ -109,20 +174,34 @@ Presentation TestPresentation {
 		activityname = "MainActivity";
 		layout = l2;
 	}
+
+	Presentation pres3 {
+		activityname = "ChatActivity";
+		layout = l3;
+	}
+
+	Presentation pres4 {
+		activityname = "DropboxActivity";
+		layout = l4;
+	}
+
+	Presentation pres5 {
+		activityname = "ListActivity";
+		layout = l5;
+	}
 }
 
 // ACTIONS AND DATA -----------------------------------------------------------
 
 Data TestData imports TestPresentation {
-	RawData passData {
+	CompData passData {
 		name = "user";
-		value = "phil";//usernameText;
+		comp = usernameText;
 		datatype = "EditText";
 	}
 }
 
-AndroidAction TestActions imports TestData {
-
+AndroidAction LayoutActions imports TestData {
 	LoginProperty lp {
 		return = false;	
 	}
@@ -138,27 +217,90 @@ AndroidAction TestActions imports TestData {
 		condition = [csp];
 	}
 
+	CallComponentAction cca {
+		properties = [];
+	}
+
+	ChangeActivityAction toChatAct {
+		oldActivity = "MainActivity";
+		newActivity = "ChatActivity";
+	}
+
+	ChangeActivityAction toDropboxAct {
+		oldActivity = "MainActivity";
+		newActivity = "DropboxActivity";
+	}
 }
 
-// UI ACTIONS ------------------------------------------------------------------
+AndroidAction LoginActions imports TestPresentation {
 
-UIAction TestUIAction imports TestActions, TestPresentation {
+	ExtractLayoutAction ela1 {
+		source = usernameText;
+		name = "username";
+	}
+
+	ExtractLayoutAction ela2 {
+		source = passwordText;
+		name = "password";
+	}
+
+}
+
+// UI ACTIONS -----------------------------------------------------------------
+
+UIAction TestUIActions imports LayoutActions, TestPresentation {
 	UIAction triggerLogin {
 		target = loginButton;
 		// Sequentially specify which actions you want to execute
-		actions = [toMainAct];
+		actions = [cca, toMainAct];
+	}
+
+	UIAction triggerChat {
+		target = chatButton;
+		actions = [toChatAct];
+	}
+
+	UIAction triggerDropbox {
+		target = dropboxButton;
+		actions = [toDropboxAct];
 	}
 }
 
 // COMPONENTS -----------------------------------------------------------------
 
-GlueComponent myComp imports TestActions {
+GlueComponent myComp imports LoginActions, TestUIActions {
 
 	Login login {
-		host = "localhost";
-		port = 80;	
+		host = "10.0.2.2";
+		port = "3000";
+
+		layoutcomponents = [usernameView, usernameText, passwordView, passwordText, loginButton];
+		actions = [ela1, ela2];
+		uiactions = [triggerLogin];
 	}
 
+	Chat chat {
+		layoutcomponents = [];
+		actions = [];
+		uiactions = [triggerChat];
+	}
+
+	Dropbox dropbox {
+		layoutcomponents = [];
+		actions = [];
+		uiactions = [triggerDropbox];
+
+		childActivity = "DropboxItemActivity";
+		folder = "/Thesis/";
+		key = "1yb8hkeirab3iq9";
+		secret = "pk2w9wbnhnfh112";
+	}
+
+	Twitter twitter { }
+
+	List list {
+		childActivity = "ListChildActivity";
+	}
 }
 
 // SERVER ---------------------------------------------------------------------
@@ -194,33 +336,63 @@ Server myServer imports mySession, myComp {
 	Server s {
 		name = "collaborative";
 		session = sessionObj;
-		host = "localhost";
-		port = 80;
-		components = [];//[chat];	
+		host = "10.0.2.2";
+		port = "3000";
+
+		components = [login, chat, dropbox, list];
 	}
 
 }
 
 // ACTIVITIES -----------------------------------------------------------------
 
-Activity TestActivity imports myComp, TestPresentation {
+Activity TestActivity imports myComp, TestPresentation, TestUIActions, LoginActions {
 	Activity act1 {
 		name = "LoginActivity";
+		main = true;
+
 		content = [login];
 		presentation = pres1;
 	}
 
 	Activity act2 {
 		name = "MainActivity";
-		content = [];
+		main = false;
+
+		content = [chat, dropbox, twitter];
 		presentation = pres2;
+	}
+
+	Activity act3 {
+		name = "ChatActivity";
+		main = false;
+
+		content = [];
+		presentation = pres3;
+	}
+
+	Activity act4 {
+		name = "DropboxActivity";
+		main = false;
+
+		content = [];
+		presentation = pres4;
+	}
+
+	Activity act5 {
+		name = "ListActivity";
+		main = false;
+
+		content = [];
+		presentation = pres5;
 	}
 }
 
 // APPLICATION ----------------------------------------------------------------
 
-Application myApp imports TestManifest, TestActivity {
+Application myApp imports TestManifest, TestActivity, myServer {
 	name = "collaborative";
 	manifest = manDesc;
-	activities = [act1, act2];
+	activities = [act1, act2, act3, act4];
+	server = s;
 }

@@ -6,8 +6,6 @@ AndroidComponent facebookComponent {
 		package = "be.pds.facebook";
 		gencodetemplate = "facebook.egl";
 		ctype = "facebook";
-
-
 	}
 
 }

@@ -1,14 +1,13 @@
 load "Session"
-load "ServerComponent"
+load "AndroidComponent"
 
-Model Server imports Session, ServerComponent {
+Model Server imports Session, AndroidComponent {
 
 	Node Server {
 		name 			: String;
 		session 		: SessionObject;
 		host 			: String;
-		port 			: int;
-		//configuration 	: String;
-		components 		: SComp[*];	
+		port 			: String;
+		components 		: SComp[*];
 	}
 }

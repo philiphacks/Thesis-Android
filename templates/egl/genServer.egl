@@ -2,6 +2,11 @@ var connect = require('connect');
 var ws = require('websocket.io');
 var session = require('./session');
 var chat = require('./chat');
+var dropbox = require('./dropbox');
+var note = require('./note');
+var mongoose = require('mongoose');
+var models = require('./models');
+var db, Message, DropboxNote, Note;
 
 // commands:
 //{"auth" : { "user" : "phil", "pass" : "foobar" } }
@@ -9,46 +14,83 @@ var chat = require('./chat');
 
 console.log('Starting main server');
 
-function auth(info, connection, fn) {
-	session.authenticate(info, connection, fn);
+function auth(info, connections, connection, fn) {
+	session.authenticate(info, connections, connection, fn);
 }
+
+// Models
+models.defineModels(mongoose, function() {
+	console.log('Connecting to mongodb');
+	exports.Message = Message = mongoose.model('Message');
+	exports.DropboxNote = DropboxNote = mongoose.model('DropboxNote');
+	exports.Note = Note = mongoose.model('Note');
+	db = mongoose.connect('mongodb://localhost/thesis');
+});
 
 var http = connect.createServer(
 	connect.logger(),
 	connect.cookieParser(),
 	connect.session({ secret: 'keyboard cat' }),
 	connect.basicAuth(auth)
-).listen(80);
+).listen(3000);
 
 var server = ws.attach(http);
 var connections = [];
 
 server.on('connection', function (socket) {
-	console.log(socket);
+	//console.log(socket);
 	connections.push({'enabled' : 'false', 'user' : '', 'connection' : socket});
 	socket.on('message', function (message) {
-		console.log(message);
 		for (var i = connections.length - 1; i >= 0; i--) {
 			if (connections[i]['connection'] == socket) {
+				console.log('Raw message: ' + message);
+				try {
+					var msg = JSON.parse(message);
+				} catch (err) {
+					console.log(err);
+				}
+				
 				if (connections[i]['enabled'] == 'false') {
 					try {
-						var msg = JSON.parse(message);
 						if (msg['auth'] != "") {
 							console.log('got auth message');
-							auth(msg['auth'], connections[i], enableConnection);
-						}	
+							auth(msg['auth'], connections, connections[i], enableConnection);
+						}
 					} catch (err) {
 						console.log(err);
 					}
 				} else if (connections[i]['enabled'] == 'true') {
 					// Authenticated. We can process the request.
 					try {
-						var msg = JSON.parse(message);
-						if (msg['chat'] != "") {
-							console.log(msg['chat']['user'] + ': ' + msg['chat']['message']);
-							//chat.distributeMessage(connections);
-							//chat.saveMessage(msg['chat']);
-						}	
+						if (msg) {
+							console.log("parsed msg : " + JSON.stringify(msg));
+							if (msg.chat) {
+								console.log("got new chat message");
+								chat.distributeMessage(msg['chat'], connections);
+							} else if (msg.lastMessages) {
+								console.log("Got request for last messages");
+								chat.getLastMessages(connections[i]);
+							} else if (msg.addFileNote) {
+								dropbox.addDropboxNote(msg['addFileNote'], connections);
+							} else if (msg.getFileNotes) {
+								dropbox.getDropboxNotes(msg['getFileNotes'], connections[i]);	
+							} else if (msg.addGenericNote) {
+								note.addNote(msg['addGenericNote'], connections);
+							} else if (msg.getGenericNotes) {
+								note.getNotes(msg['getGenericNotes'], connections[i]);
+							} else if (msg.getConnectedUsers) {
+								session.getConnectedUsers(connections, connections[i]);
+							} else if (msg.authed) {
+								console.log('Sending new authed message');
+								var user = connections[i].user;
+								connections[i]['connection'].send('{ "message" : { "type" : "authed", "user" : "' + user + '" } }');
+							} else if (msg.quit) {
+								console.log('Disabling socket connection');
+								connections[i]['enabled'] = 'false'
+							} else {
+								connections[i]['connection'].send('{ "message" : { "type" : "error" } }');
+							}
+						}
 					} catch (err) {
 						console.log(err);
 					}
@@ -66,12 +108,21 @@ server.on('connection', function (socket) {
 	});
 });
 
-function enableConnection(c, user, error) {
+function enableConnection(c, connections, user, error) {
 	if (error) {
 		c['connection'].send("Wrong username/password");
 	} else {
-		console.log('connection established successfully!');
-		c['enabled'] = 'true';	
+		console.log('connection for user ' + user + ' established successfully!');
+		c['enabled'] = 'true';
 		c['user'] = user;
+		authed = [];
+		authed['user'] = c['user'];
+
+		var msg = {};
+		msg['message'] = {};
+		msg['message']['type'] = "authed";
+		console.log('sending message ' + JSON.stringify(msg));
+		c['connection'].send(msg);
+		session.newConnectedUser(connections, c);
 	}
 }

@@ -5,12 +5,61 @@
 	android:layout_height="fill_parent"
 	>
 
-		<TextView
-			android:id="@+id/inActTwo"
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
-			android:text="You're in activity two!"
-			android:gravity=""
-		/>
+			<TextView
+				android:id="@+id/welcomeMsg"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:text="Welcome to the collaborative application!"
+				android:gravity=""
+			/>
+			<Button
+				android:id="@+id/chatButton"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="Chat"
+				android:gravity=""
+			/>
+			<Button
+				android:id="@+id/documentsButton"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="Documents"
+				android:gravity=""
+			/>
+			<Button
+				android:id="@+id/listButton"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="Goals"
+				android:gravity=""
+			/>
+			<Button
+				android:id="@+id/tweetButton"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="Tweet"
+				android:gravity=""
+			/>
+			<Button
+				android:id="@+id/logoutButton"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:text="Chat"
+				android:gravity=""
+			/>
+			<TextView
+				android:id="@+id/connectedUsersText"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:text="Connected Users"
+				android:gravity=""
+			/>
+			<TextView
+				android:id="@+id/connectedUsers"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:text=""
+				android:gravity=""
+			/>
 	
 </LinearLayout>

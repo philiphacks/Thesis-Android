@@ -1,8 +1,6 @@
 Model ServerProperty {
 	
-	Node ServerProperty {
-		
-	}
+	Node ServerProperty { }
 
 	Node LoginProperty : ServerProperty {
 		return 		: boolean;

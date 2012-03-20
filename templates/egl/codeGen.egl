@@ -24,6 +24,12 @@
 	t := TemplateFactory.load(basePath+'genActivity.egl');
 	if (application.activities.isDefined() and application.activities.size() > 0) {
 		for (activity in application.activities) {
+			if (activity.main == true) {
+				"populating server var".println();
+				if (application.server.isDefined()) {
+					t.populate('server', application.server);
+				}
+			}
 			t.populate('activity', activity);
 			t.populate('application', application);
 			t.populate('path', path);

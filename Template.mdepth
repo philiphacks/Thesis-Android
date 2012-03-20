@@ -1,0 +1,334 @@
+load "Presentation"
+	
+Presentation DropboxLayout {
+	// DROPBOX LAYOUT ----------------------------------------------------------
+
+	LayoutType dropboxLayout {
+		name = "LinearLayout";
+		orientation = "vertical";
+
+		children = [dropboxButton, dirContentButton, contentText, dirContent];
+	}
+
+	Button dropboxButton {
+		layoutID = "dropboxButton";
+		width = "wrap_content";
+		height = "wrap_content";
+		text = "Authenticate Dropbox";
+	}
+
+	Button dirContentButton {
+		layoutID = "dirContentButton";
+		width = "wrap_content";
+		height = "wrap_content";
+		text = "Get directory content";
+	}
+
+	TextView contentText {
+		layoutID = "contentText";
+		width="wrap_content";
+		height="wrap_content";
+		text="Directory content";
+	}
+
+	ListView dirContent {
+		layoutID = "dirContent";
+		width = "wrap_content";
+		height = "wrap_content";
+	}
+
+	// DROPBOXITEM LAYOUT ----------------------------------------------------------
+
+	LayoutType dropboxItemLayout {
+		name = "LinearLayout";
+		orientation = "vertical";
+
+		children = [filename, downloadButton, notesText, addNotes];
+	}
+
+	TextView filename {
+		layoutID = "filename";
+		width = "wrap_content";
+		height = "wrap_content";
+		text = "";
+	}
+
+	Button downloadButton {
+		layoutID = "downloadButton";
+		width = "wrap_content";
+		height = "wrap_content";
+		text = "Download file";
+	}
+
+	TextView notesText {
+		layoutID = "notesText";
+		width = "wrap_content";
+		height = "wrap_content";
+		text = "Notes on this file";
+	}
+
+	ScrollView addNotes {
+		width = "fill_parent";
+		height = "0dip";
+		weight = "1";
+		components = [noteOutputView];
+	}
+
+	TextView noteOutputView {
+		layoutID = "noteOutput";
+		width = "fill_parent";
+		height = "wrap_content";
+		text = "";
+		paddingLeft="5dp";
+		paddingRight="5dp"; 
+		paddingTop="5dp";
+	}
+
+	LayoutType childLayout2 {
+		name = "LinearLayout";
+
+		layoutID = "linearLayout2";
+		orientation="horizontal";
+		width="fill_parent";
+		height="wrap_content"; 
+		paddingLeft="5dp";
+		paddingRight="5dp";
+		paddingBottom="5dp";
+		baselineAligned="true";
+
+		children = [noteInput, addNoteButton];
+	}
+
+	EditText noteInput {
+		layoutID = "noteInput";
+		weight = "1";
+		width = "0dip";
+		height = "90dp";
+		requestFocus = true;
+	}
+
+	Button addNoteButton {
+		layoutID = "addNoteButton";
+		width = "125dp";
+		height = "45dp";
+		text = "Add note";
+	}
+}
+
+Presentation ChatLayout {
+	// CHAT LAYOUT -------------------------------------------------------------
+
+	LayoutType chatLayout {
+		name = "LinearLayout";
+		orientation = "vertical";
+
+		children = [chatBox, childLayout];
+	}
+
+	ScrollView chatBox {
+		layoutID = "scrollChat";
+		width = "fill_parent";
+		height = "0dip";
+		weight = "1";
+		components = [textOutputView];
+		text = "";
+	}
+
+	TextView textOutputView {
+		layoutID = "textOutput";
+		width = "fill_parent";
+		height = "wrap_content";
+		text = "";
+		paddingLeft="5dp";
+		paddingRight="5dp"; 
+		paddingTop="5dp";
+	}
+
+	LayoutType childLayout {
+		name = "LinearLayout";
+
+		layoutID = "linearLayout1";
+		orientation="horizontal";
+		width="fill_parent";
+		height="wrap_content"; 
+		paddingLeft="5dp";
+		paddingRight="5dp";
+		paddingBottom="5dp";
+		baselineAligned="true";
+
+		children = [chatTextInput, sendChatMsg];
+	}
+
+	EditText chatTextInput {
+		layoutID = "textInput";
+		weight = "1";
+		width = "0dip";
+		height = "45dp";
+		requestFocus = true;
+	}
+
+	Button sendChatMsg {
+		layoutID = "sendButton";
+		width = "125dp";
+		height = "45dp";
+		text = "Send";
+	}
+}
+
+Presentation LoginLayout {
+	// LOGIN LAYOUT -----------------------------------------------------------
+
+	LayoutType loginLayout {
+		name = "LinearLayout";
+		orientation = "vertical";
+
+		children = [usernameView, usernameText, passwordView, passwordText, loginButton];
+	}
+
+	TextView usernameView {
+		layoutID = "usernameView";
+		width = "fill_parent";
+		height = "wrap_content";
+		text = "Username";
+	}
+
+	EditText usernameText {
+		layoutID = "usernameText";
+		width = "fill_parent";
+		height = "wrap_content";
+	}
+
+	TextView passwordView {
+		layoutID = "passwordView";
+		width = "fill_parent";
+		height = "wrap_content";
+		text = "Password";
+	}
+
+	EditText passwordText {
+		layoutID = "passwordText";
+		width = "fill_parent";
+		height = "wrap_content";
+		password = "true";
+	}
+
+	Button loginButton {
+		layoutID = "loginButton";
+		width = "wrap_content";
+		height = "wrap_content";
+		text = "Login!";
+	}
+}
+
+Presentation GenericListLayout {
+	// GENERIC LIST LAYOUT --------------------------------------------------------
+
+	LayoutType listLayout {
+		name = "LinearLayout";
+		orientation = "vertical";
+
+		children = [noteContent, childLayout3];
+	}
+
+	ListView noteContent {
+		layoutID = "noteContent";
+		width = "wrap_content";
+		height = "wrap_content";
+	}
+
+	LayoutType childLayout3 {
+		name = "LinearLayout";
+
+		layoutID = "linearLayout3";
+		orientation="horizontal";
+		width="fill_parent";
+		height="wrap_content"; 
+		paddingLeft="5dp";
+		paddingRight="5dp";
+		paddingBottom="5dp";
+		baselineAligned="true";
+
+		children = [noteItemInput, addNoteItemButton];
+	}
+
+	EditText noteItemInput {
+		layoutID = "noteItemInput";
+		weight = "1";
+		width = "0dip";
+		height = "90dp";
+		requestFocus = true;
+	}
+
+	Button addNoteItemButton {
+		layoutID = "addNoteItemButton";
+		width = "125dp";
+		height = "45dp";
+		text = "Add note";
+	}
+
+	// GENERIC LIST ITEM LAYOUT -------------------------------------------
+
+	LayoutType listItemLayout {
+		name = "LinearLayout";
+		orientation = "vertical";
+
+		children = [parentItem, genericItemScroll, childLayout4];
+	}
+
+	TextView parentItem {
+		layoutID = "parentItem";
+		width = "wrap_content";
+		height = "wrap_content";
+		text = "";
+	}
+
+	ScrollView genericItemScroll {
+		layoutID = "genericItemScroll";
+		width = "fill_parent";
+		height = "0dip";
+		weight = "1";
+		components = [itemOutput];
+		text = "";
+	}
+
+	TextView itemOutput {
+		layoutID = "itemOutput";
+		width = "fill_parent";
+		height = "wrap_content";
+		text = "";
+		paddingLeft="5dp";
+		paddingRight="5dp";
+		paddingTop="5dp";
+	}
+
+	LayoutType childLayout4 {
+		name = "LinearLayout";
+
+		layoutID = "linearLayout4";
+		orientation="horizontal";
+		width="fill_parent";
+		height="wrap_content"; 
+		paddingLeft="5dp";
+		paddingRight="5dp";
+		paddingBottom="5dp";
+		baselineAligned="true";
+
+		children = [itemInput, addNewItemButton];
+	}
+
+	EditText itemInput {
+		layoutID = "itemInput";
+		weight = "1";
+		width = "0dip";
+		height = "90dp";
+		requestFocus = true;
+	}
+
+	Button addNewItemButton {
+		layoutID = "addNewItemButton";
+		width = "125dp";
+		height = "45dp";
+		text = "Add new item";
+	}
+}
+

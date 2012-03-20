@@ -22,14 +22,18 @@ public class [%= activity.name %] extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        [% if (activity.main) { %]
+        ServerConnection.getInstance().setHost("[%= server.host %]");
+        ServerConnection.getInstance().setPort("[%= server.port %]");
+        ServerConnection.getInstance().connect();
+        [% } %]
         [% if (activity.presentation.isDefined()) { %]
         setContentView(R.layout.[%= activity.presentation.layout.name %]);
         [% } %]
-
         [% for (c in activity.content) { %]
 			[%= c %] = new [%= c.type %]Component(this);
     	[% } %]
-		[% for (c in activity.presentation.layout.layoutDesc.components) { %]
+		[% for (c in activity.presentation.layout.layoutType.children) { %]
 			[%= c.type %] [%= c %] = ([%= c.type %]) this.findViewById(R.id.[%= c.layoutID %]);
 		[% } %]
 
@@ -53,35 +57,6 @@ public class [%= activity.name %] extends Activity {
 				[% } %]
 			[% } %]
 		[% } %]
-
-		[% if (UIAction.all.size() > 0) { %]
-			hello
-			[% for (a in UIAction.all) { %]
-				jup
-				[% if (a.target.isTypeOf(Button)) { %]
-					final [%= activity.name %] parent = this;
-					[%= a.target %].setOnClickListener(new View.OnClickListener() {
-						@Override
-						public void onClick(View v) {
-[% for (action in a.actions) { %]
-	HashMap<String, Object> properties = new HashMap<String, Object>();
-	properties.put("class", "[%= application.manifest.package %].[%= action.newActivity %]");
-	[% if (action.data.isDefined() and action.data.size() > 0) { %]
-	HashMap<String, String> data = new HashMap<String, String>();
-	[% for (d in action.data) { %]
-	data.put("[%= d.name %]", (String)"[%= d.value %]");
-	[% } %]
-	properties.put("data", data);
-	[% } %]
-	ChangeActivityAction caa = new ChangeActivityAction(properties);
-	caa.setCallingActivity(parent);
-	caa.execute();
-[% } %]
-						}
-					});
-				[% } %]
-			[% } %]
-		[% } %]
     }
 
 	[%
@@ -93,14 +68,17 @@ public class [%= activity.name %] extends Activity {
 	[% for (c in activity.content) {
 		if (c.isTypeOf(Twitter)) {
 			types.add('twitter');
-		} else if (c.isTypeOf(Facebook)) {
-			types.add('facebook');
+		} else if (c.isTypeOf(Dropbox)) {
+			types.add('dropbox');
 		}
 
 		var t : Template := TemplateFactory.load(compPath+c.gencodetemplate);
+		"generating components".println();
 		t.populate('component', c);
+		c.gencodetemplate.println();
 		t.populate('name', activity.name);
 		t.populate('package', application.manifest.package);
+		t.populate('path', path);
 		t.populate('basePath', basePath);
 		t.populate('compPath', compPath);
 		t.populate('codePath', codePath);

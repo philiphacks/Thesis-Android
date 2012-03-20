@@ -1,0 +1,58 @@
+// Thesis MongoDB models
+// Philip De Smedt
+// 12/02/2012
+
+var Message;
+
+// Based on the dailyjs.com tutorial: Nodepad
+// Source: https://github.com/alexyoung/nodepad/blob/master/models.js
+// Virtual attributes are getters and setters 
+// Middleware is a convenient way of injecting functions into key lifecycle events.
+function defineModels(mongoose, fn) {
+	var Schema = mongoose.Schema;
+	
+	// Define the Message schema
+	Message = new Schema({
+		text: { type: String, required: true },
+		// Send by whom?
+		user: String,
+		date: { type: Date, default: Date.now }
+	});
+		
+	Message.virtual('id')
+		.get(function() {
+			return this._id.toHexString();
+		});
+	
+	DropboxNote = new Schema({
+		file: { type: String, required: true },
+		text: { type: String, required: true },
+		user: String,
+		date: { type: Date, default: Date.now }
+	});
+
+	DropboxNote.virtual('id')
+		.get(function() {
+			return this._id.toHexString();
+		});
+
+	Note = new Schema({
+		type: { type: String, required: true },
+		parent: { type: String, required: true },
+		text: { type: String, required: true },
+		user: String,
+		date: { type: Date, default: Date.now }
+	});
+
+	Note.virtual('id')
+		.get(function() {
+			return this._id.toHexString();
+		});
+
+	mongoose.model('Message', Message);
+	mongoose.model('DropboxNote', DropboxNote);
+	mongoose.model('Note', Note);
+	fn();
+}
+
+exports.defineModels = defineModels;

@@ -5,7 +5,9 @@ load "components/twitterComponent"
 load "components/foursquareComponent"
 load "components/facebookComponent"
 load "components/loginComponent"
-load "AndroidAction"
+load "components/chatComponent"
+load "components/dropboxComponent"
+load "components/listComponent"
 
 AndroidComponent GlueComponent imports smsComponent,
 									   geoComponent,
@@ -14,7 +16,9 @@ AndroidComponent GlueComponent imports smsComponent,
 									   foursquareComponent,
 									   facebookComponent,
 									   loginComponent,
-									   AndroidAction
+									   chatComponent,
+									   dropboxComponent,
+									   listComponent
 {
-	actions 	: Action[*];
+
 }

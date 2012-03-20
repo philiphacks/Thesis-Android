@@ -11,10 +11,8 @@ Model Data imports Component {
 		value 		: String;
 	}
 
-	// Gives ERROR
-	// :: invalid creation of element ComponentData in context Data
-	//Node ComponentData : Data {
-	//	value 		: Component@0;
-	//}
+	Node CompData : Data {
+		comp 		: LayoutComponent;
+	}
 
 }

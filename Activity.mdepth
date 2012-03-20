@@ -1,12 +1,18 @@
 load "Presentation"
 load "Component"
+load "AndroidAction"
+load "UIAction"
 
-Model Activity imports Presentation, Component {
+Model Activity imports Presentation, Component, AndroidAction, UIAction {
 
 	Node Activity {
 		name			: String;
+		main 			: boolean;
+
 		content			: Component@0[*];
 		presentation	: Presentation[1];
+		actions 		: Action[*];
+		uiactions 		: UIAction[*];
 	}
 
 }

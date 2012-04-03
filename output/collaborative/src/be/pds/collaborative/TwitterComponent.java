@@ -35,7 +35,7 @@ public class TwitterComponent extends AndroidComponent {
 
 	    this.prefs = PreferenceManager.getDefaultSharedPreferences(this.parent);
 	    properties = new HashMap<String, Object>();
-	    	properties.put("tweet", "I am using a collaborative application to do research!");
+	    	properties.put("tweet", "I am using the collaborative application to do research!");
 	}
 
 	final Runnable mUpdateTwitterNotification = new Runnable() {

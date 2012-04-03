@@ -74,6 +74,25 @@
 		}
 	}
 
+	// generate new classpath file
+	var classpath : Template := TemplateFactory.load(basePath+'genClasspath.egl');
+	var types : Sequence := Sequence{};
+	if (application.activities.isDefined() and application.activities.size() > 0) {
+		for (activity in application.activities) {
+			for (c in activity.content) {
+				if (c.isTypeOf(Twitter)) {
+					types.add('twitter');
+				} else if (c.isTypeOf(Dropbox)) {
+					types.add('dropbox');
+				}
+			}
+		}
+	}
+	classpath.populate('types', types);
+	classpath.process();
+	classpath.generate(codePath+'.classpath');
+
+	// generate hard-coded strings
 	t := TemplateFactory.load(basePath+'genStrings.egl');
 	t.populate('name', application.name);
 	t.process();

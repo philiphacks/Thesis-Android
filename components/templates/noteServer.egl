@@ -52,3 +52,28 @@ exports.getNotes = function (note, connection) {
 		}
 	});
 }
+
+exports.getNotesForUser = function (note, connection) {
+	var parent = "null";
+	var type = note.type;
+	if (note.parent != "null") {
+		console.log("Request for notes with parent " + note.parent);
+		parent = note.parent;
+		type = "genchild";
+	}
+	app.Note.find({type: note.type, parent: parent, user: connection.user}, function (err, notes) {
+		for (var i = 0; i < notes.length; i++) {
+			var no = {};
+			no['message'] = {};
+			no['message']['type'] = type;
+			if (type == "genchild") {
+				no['message']['genericType'] = note.type;
+			}
+			no['message']['parent'] = parent;
+			no['message']['user'] = notes[i].user;
+			no['message']['message'] = notes[i].text;
+			console.log(JSON.stringify(no));
+			connection['connection'].send(JSON.stringify(no));
+		}
+	});
+}

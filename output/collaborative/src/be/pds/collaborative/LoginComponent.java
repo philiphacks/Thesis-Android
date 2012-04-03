@@ -42,21 +42,19 @@ public class LoginComponent extends AndroidComponent {
 
 		properties.put("class", "be.pds.collaborative.MainActivity");
 			HashMap<String, String> data = new HashMap<String, String>();
-					data.put("user", (String)usernameText.getText());
+					data.put("user", (String)usernameText.getText().toString());
 				properties.put("data", data);
-					if (ServerConnection.getInstance().checkServerProperty("LoginProperty")) {
-						ChangeActivityAction caa = new ChangeActivityAction(properties);
-						caa.setCallingActivity(parentAct);
-						caa.execute();
-					}
+				if (ServerConnection.getInstance().checkServerProperty("LoginProperty")) {
+					ChangeActivityAction caa = new ChangeActivityAction(properties);
+					caa.setCallingActivity(parentAct);
+					caa.execute();
+				}
 						}
 					});
 	}
 
 	public void action(HashMap<String, Object> properties) {
-					// TODO: make a class out of this?
 					properties.put("username", usernameText.getText().toString());
-					// TODO: make a class out of this?
 					properties.put("password", passwordText.getText().toString());
 		login();
 	}
@@ -65,4 +63,7 @@ public class LoginComponent extends AndroidComponent {
 		String msg = "{\"auth\" : { \"user\" : \"" + properties.get("username") + "\", \"pass\" : \"" + properties.get("password") + "\" } }";
 		ServerConnection.getInstance().sendMessage(msg);
 	}
+
+	@Override
+	public void onMessage(String message) { }
 }

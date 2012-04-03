@@ -83,7 +83,7 @@ Presentation TestPresentation imports DropboxLayout, ChatLayout, LoginLayout, Ge
 	}
 
 	LayoutDesc l4b {
-		name = "dropboxItem";
+		name = "dropboxitem";
 		layoutType = dropboxItemLayout;
 	}
 
@@ -104,7 +104,7 @@ Presentation TestPresentation imports DropboxLayout, ChatLayout, LoginLayout, Ge
 		orientation = "vertical";
 
 		children = [welcomeMsgView, chatButton, documentsButton, listButton, tweetButton,
-			logoutButton, connectedUsersTextView, connectedUsersView];
+			logoutButton, connectedUsersText, connectedUsers];
 	}
 
 	TextView welcomeMsgView {
@@ -146,17 +146,17 @@ Presentation TestPresentation imports DropboxLayout, ChatLayout, LoginLayout, Ge
 		layoutID = "logoutButton";
 		width = "wrap_content";
 		height = "wrap_content";
-		text = "Chat";
+		text = "Logout";
 	}
 
-	TextView connectedUsersTextView {
+	TextView connectedUsersText {
 		layoutID = "connectedUsersText";
 		width="fill_parent";
 		height="wrap_content";
 		text="Connected Users";
 	}
 
-	TextView connectedUsersView {
+	TextView connectedUsers {
 		layoutID = "connectedUsers";
 		width="fill_parent";
 		height="wrap_content";
@@ -185,9 +185,19 @@ Presentation TestPresentation imports DropboxLayout, ChatLayout, LoginLayout, Ge
 		layout = l4;
 	}
 
+	Presentation pres4b {
+		activityname = "DropboxItemActivity";
+		layout = l4b;
+	}
+
 	Presentation pres5 {
 		activityname = "ListActivity";
 		layout = l5;
+	}
+
+	Presentation pres5b {
+		activityname = "ListChildActivity";
+		layout = l5b;
 	}
 }
 
@@ -230,6 +240,10 @@ AndroidAction LayoutActions imports TestData {
 		oldActivity = "MainActivity";
 		newActivity = "DropboxActivity";
 	}
+
+	EndActivityAction toLoginAct {
+		notifyServer = true;
+	}
 }
 
 AndroidAction LoginActions imports TestPresentation {
@@ -249,20 +263,25 @@ AndroidAction LoginActions imports TestPresentation {
 // UI ACTIONS -----------------------------------------------------------------
 
 UIAction TestUIActions imports LayoutActions, TestPresentation {
-	UIAction triggerLogin {
+	OnClickListener triggerLogin {
 		target = loginButton;
 		// Sequentially specify which actions you want to execute
 		actions = [cca, toMainAct];
 	}
 
-	UIAction triggerChat {
+	OnClickListener triggerChat {
 		target = chatButton;
 		actions = [toChatAct];
 	}
 
-	UIAction triggerDropbox {
-		target = dropboxButton;
+	OnClickListener triggerDropbox {
+		target = documentsButton;
 		actions = [toDropboxAct];
+	}
+
+	OnClickListener triggerLogout {
+		target = logoutButton;
+		actions = [toLoginAct];
 	}
 }
 
@@ -280,15 +299,17 @@ GlueComponent myComp imports LoginActions, TestUIActions {
 	}
 
 	Chat chat {
-		layoutcomponents = [];
+		inputField = textInput;
+		outputField = textOutput;
+		sendButton = sendButton;
 		actions = [];
-		uiactions = [triggerChat];
+		uiactions = [];
 	}
 
 	Dropbox dropbox {
-		layoutcomponents = [];
+		layoutcomponents = [dropboxButton, dirContentButton, contentText, dirContent];
 		actions = [];
-		uiactions = [triggerDropbox];
+		uiactions = [];
 
 		childActivity = "DropboxItemActivity";
 		folder = "/Thesis/";
@@ -296,7 +317,10 @@ GlueComponent myComp imports LoginActions, TestUIActions {
 		secret = "pk2w9wbnhnfh112";
 	}
 
-	Twitter twitter { }
+	Twitter twitter {
+		text = "I am using the collaborative application to do research!";
+		sendButton = tweetButton;
+	}
 
 	List list {
 		childActivity = "ListChildActivity";
@@ -323,30 +347,30 @@ Session mySession {
 		last_name = "de Lara";
 		username = "juan";
 		password = "foobar2";
-		role = admin;
+		role = user;
 	}
 
-	Role admin {
-		name = "admin";
-	}
+	AdminRole admin { }
+	UserRole user { }
 }
 
 Server myServer imports mySession, myComp {
 
 	Server s {
-		name = "collaborative";
-		session = sessionObj;
+		name = "myServer";
+		components = [login, chat, dropbox, list];
 		host = "10.0.2.2";
 		port = "3000";
 
-		components = [login, chat, dropbox, list];
+		session = sessionObj;
 	}
 
+	ChatActivity ca { }
 }
 
 // ACTIVITIES -----------------------------------------------------------------
 
-Activity TestActivity imports myComp, TestPresentation, TestUIActions, LoginActions {
+Activity TestActivity imports myComp, TestPresentation, TestUIActions, LoginActions, myServer {
 	Activity act1 {
 		name = "LoginActivity";
 		main = true;
@@ -355,37 +379,41 @@ Activity TestActivity imports myComp, TestPresentation, TestUIActions, LoginActi
 		presentation = pres1;
 	}
 
-	Activity act2 {
+	MainActivity act2 {
 		name = "MainActivity";
 		main = false;
 
-		content = [chat, dropbox, twitter];
+		content = [twitter];
 		presentation = pres2;
+		onClickListeners = [triggerChat, triggerDropbox, triggerLogout];
+		userView = connectedUsers;
 	}
 
-	Activity act3 {
+	GenericActivity act3 {
 		name = "ChatActivity";
 		main = false;
 
-		content = [];
+		content = [chat];
 		presentation = pres3;
+		registerToServer = ca;
 	}
 
 	Activity act4 {
 		name = "DropboxActivity";
 		main = false;
 
-		content = [];
+		content = [dropbox];
 		presentation = pres4;
 	}
 
-	Activity act5 {
+	GenericActivity act5 {
 		name = "ListActivity";
 		main = false;
 
-		content = [];
+		content = [list];
 		presentation = pres5;
 	}
+
 }
 
 // APPLICATION ----------------------------------------------------------------
@@ -393,6 +421,6 @@ Activity TestActivity imports myComp, TestPresentation, TestUIActions, LoginActi
 Application myApp imports TestManifest, TestActivity, myServer {
 	name = "collaborative";
 	manifest = manDesc;
-	activities = [act1, act2, act3, act4];
+	activities = [act1, act2, act3, act4, act5];
 	server = s;
 }

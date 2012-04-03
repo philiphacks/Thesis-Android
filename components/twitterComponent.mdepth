@@ -1,12 +1,16 @@
-load "AndroidComponent"
+load "Component"
 
-AndroidComponent twitterComponent {
+AndroidComponent twitterComponent imports Component {
 	
 	AComp Twitter {
 		package = "be.pds.twitter";
 		gencodetemplate = "twitter.egl";
 		ctype = "twitter";
 		dependencies = [d1, d2, d3];
+
+		text		: String;
+		inputField 	: Layout@0[1];
+		sendButton 	: Layout@0[1];
 	}
 
 	DependencyComponent d1 {

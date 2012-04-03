@@ -9,11 +9,6 @@ Model AndroidAction imports Component, ServerProperty, Data {
 		condition 		: Action;
 	}
 
-	// e.g. Fill in a text field or change a view...
-	Node ChangeLayoutAction : Action {
-		component 		: Component@0;
-	}
-
 	// e.g. use the value of a text field to call the action method of a component
 	Node ExtractLayoutAction : Action {
 		source 			: Component@0;
@@ -27,12 +22,13 @@ Model AndroidAction imports Component, ServerProperty, Data {
 
 	// Specify the target activity
 	Node ChangeActivityAction : Action {
-		// Due to design problems, this can't be a reference to Activity for now...
-		//newActivity 	: Activity;
-		
 		oldActivity 	: String;
 		newActivity 	: String;
 		data 			: Data[*];
+	}
+
+	Node EndActivityAction : Action {
+		notifyServer 	: boolean;
 	}
 
 	// Call the action method of a component.

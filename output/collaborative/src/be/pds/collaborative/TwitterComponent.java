@@ -1,10 +1,22 @@
 package be.pds.collaborative;
 
 
+import java.util.HashMap;
+
+import android.app.Activity;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Handler;
+import android.preference.PreferenceManager;
+import android.widget.Toast;
+import be.pds.thesis.AndroidComponent;
+
 public class TwitterComponent extends AndroidComponent {
 
 	private SharedPreferences prefs;
 	private final Handler mTwitterHandler = new Handler();
+	private HashMap<String, Object> properties;
+		private Button tweetButton;
 
 
 	public TwitterComponent(Activity a) {
@@ -13,19 +25,22 @@ public class TwitterComponent extends AndroidComponent {
 	}
 
 	private void setupTwitter() { 
+			tweetButton = (Button) this.parent.findViewById(R.id.tweetButton);
+			tweetButton.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					action(properties);
+				}
+			});
 
-	    this.prefs = PreferenceManager.getDefaultSharedPreferences(this);
-	    sendTweet.setOnClickListener(new View.OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				authAndTweet();
-			}
-		});
+	    this.prefs = PreferenceManager.getDefaultSharedPreferences(this.parent);
+	    properties = new HashMap<String, Object>();
+	    	properties.put("tweet", "I am using a collaborative application to do research!");
 	}
 
 	final Runnable mUpdateTwitterNotification = new Runnable() {
 		public void run() {
-			Toast.makeText(this.parent.getBaseContext(), "Tweet sent !", Toast.LENGTH_LONG).show();
+			Toast.makeText(parent.getBaseContext(), "Tweet sent !", Toast.LENGTH_LONG).show();
 		}
 	};
 
@@ -39,13 +54,16 @@ public class TwitterComponent extends AndroidComponent {
 			sendTweet();
 		} else {
 			Intent i = new Intent(this.parent.getApplicationContext(), PrepareRequestTokenActivity.class);
-			i.putExtra("tweet_msg", tweetText.getText().toString());
 			this.parent.startActivity(i);
 		}
 	}
 
 	private void sendTweet() {
-		sendTweet(tweetText.getText().toString());
+		String tweet = "";
+		if (properties.get("tweet") != null) {
+			tweet = (String)properties.get("tweet");
+		}
+		sendTweet(tweet);
 	}
 
 	@Override

@@ -1,7 +1,14 @@
 load "Component"
 
-AndroidComponent chatComponent {
+AndroidComponent chatComponent imports Component {
 	
-	SComp Chat { }
+	SComp Chat {
+		ctype = "chat";
+		gencodetemplate = "chat.egl";
+
+		inputField : Layout@0[1];
+		outputField : Layout@0[1];
+		sendButton : Layout@0[1];
+	}
 	
 }

@@ -5,9 +5,17 @@ Model Server imports Session, AndroidComponent {
 
 	Node Server {
 		name 			: String;
-		session 		: SessionObject;
 		host 			: String;
 		port 			: String;
-		components 		: SComp[*];
+		components 		: SComp@0[*];
+		session 		: SessionObject;
 	}
+
+	abstract Node RegisterActivity { }
+
+	Node ChatActivity : RegisterActivity { }
+
+	Node DropboxActivity : RegisterActivity { }
+
+	Node ListActivity : RegisterActivity { }
 }

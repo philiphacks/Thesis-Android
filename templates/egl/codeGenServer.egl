@@ -1,13 +1,13 @@
 [%
-	var server : Server := Server.allInstances().first();
+	var app : Application := Application.allInstances().first();
 	var basePath : String := URI+DIR+"templates/egl/";
 	var compPath : String := URI+DIR+"components/templates/";
-	var codePath : String := URI+DIR+"output/"+server.name+"/";
+	var codePath : String := URI+DIR+"output/"+ app.server.name +"/";
 
 	var s : Template := TemplateFactory.load(basePath+'genServer.egl');
-	
-	s.populate('server', server);
-	s.populate('components', server.components);
+
+	"Generating server".println();	
+	s.populate('server', app.server);
 	s.populate('basePath',    basePath);
 	s.populate('compPath',    compPath);
 	s.process();
@@ -19,33 +19,30 @@
 	s.process();
 	s.generate(codePath+'models.js');
 
-	if (server.components.isDefined() and server.components.size() > 0) {
-		for (c in server.components) {
-			if (c.isTypeOf(Chat)) {
-				s := TemplateFactory.load(compPath+'chatServer.egl');
-				s.populate('basePath',    basePath);
-				s.populate('compPath',    compPath);
-				s.process();
-				s.generate(codePath+'chat.js');
-			} else if (c.isTypeOf(Dropbox)) {
-				s := TemplateFactory.load(compPath+'dropboxServer.egl');
-				s.populate('basePath',    basePath);
-				s.populate('compPath',    compPath);
-				s.process();
-				s.generate(codePath+'dropbox.js');
-			} else if (c.isTypeOf(Login)) {
-				s := TemplateFactory.load(compPath+'loginServer.egl');
-				s.populate('basePath',    basePath);
-				s.populate('compPath',    compPath);
-				s.process();
-				s.generate(codePath+'session.js');
-			} else if (c.isTypeOf(List)) {
-				s := TemplateFactory.load(compPath+'noteServer.egl');
-				s.populate('basePath',    basePath);
-				s.populate('compPath',    compPath);
-				s.process();
-				s.generate(codePath+'note.js');
-			}
-		}	
-	}
+	s := TemplateFactory.load(compPath+'chatServer.egl');
+	s.populate('basePath',    basePath);
+	s.populate('compPath',    compPath);
+	s.process();
+	s.generate(codePath+'chat.js');
+
+	s := TemplateFactory.load(compPath+'dropboxServer.egl');
+	s.populate('basePath',    basePath);
+	s.populate('compPath',    compPath);
+	s.process();
+	s.generate(codePath+'dropbox.js');
+
+	s := TemplateFactory.load(compPath+'loginServer.egl');
+	s.populate('basePath',    basePath);
+	s.populate('compPath',    compPath);
+	s.populate('session', app.server.session);
+	s.process();
+	s.generate(codePath+'session.js');
+
+	s := TemplateFactory.load(compPath+'noteServer.egl');
+	s.populate('basePath',    basePath);
+	s.populate('compPath',    compPath);
+	s.process();
+	s.generate(codePath+'note.js');
+
+	"Server generated.".println();
 %]

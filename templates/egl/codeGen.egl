@@ -45,6 +45,7 @@
 					if (c.dependencies.isDefined() and c.dependencies.size() > 0) {
 						for (d in c.dependencies) {
 							l.populate('dependency', d);
+							l.populate('package', application.manifest.package);
 							l.populate('basePath',    basePath);
 							l.populate('compPath',    compPath);
 							l.process();
@@ -61,6 +62,8 @@
 	if (application.activities.isDefined() and application.activities.size() > 0) { 
 		for (activity in application.activities) {
 			if (activity.presentation.isDefined()) {
+				"generating layout: ".println();
+				activity.presentation.layout.name.println();
 				t.populate('layout', activity.presentation.layout);
 				t.populate('application', application);
 				t.populate('basePath',    basePath);

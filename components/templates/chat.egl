@@ -1,0 +1,83 @@
+[% out.setContentType('Java'); %]
+package [%= package %];
+
+import java.util.HashMap;
+
+import android.app.Activity;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import be.pds.thesis.AndroidComponent;
+import be.pds.thesis.ServerConnection;
+
+public class ChatComponent extends AndroidComponent {
+	
+	private final String TAG = getClass().getName();
+	private HashMap<String, Object> properties;
+	private String user;
+	[% if (component.inputField.isDefined() and component.inputField.size() > 0) { %]
+		private [%= component.inputField.type %] [%= component.inputField %];
+	[% } %]
+	[% if (component.outputField.isDefined() and component.outputField.size() > 0) { %]
+		private [%= component.outputField.type %] [%= component.outputField %];
+	[% } %]
+	[% if (component.sendButton.isDefined() and component.sendButton.size() > 0) { %]
+		private [%= component.sendButton.type %] [%= component.sendButton %];
+	[% } %]
+	[% if (component.layoutcomponents.isDefined() and component.layoutcomponents.size() > 0) { %]
+		[% for (c in component.layoutcomponents) { %]
+			private [%= c.type %] [%= c %];
+		[% } %]
+	[% } %]
+	
+	public ChatComponent(Activity a) {
+		super(a);
+		properties = new HashMap<String, Object>();
+		user = ServerConnection.getInstance().getUser();
+		ServerConnection.getInstance().getLastMessages();
+
+		[% if (component.layoutcomponents.isDefined() and component.layoutcomponents.size() > 0) { %]
+			[% for (c in component.layoutcomponents) { %]
+	    	[%= c %] = ([%= c.type %]) this.parent.findViewById(R.id.[%= c.layoutID %]);
+	    	[% } %]
+		[% } %]
+		[% if (component.inputField.isDefined() and component.inputField.size() > 0) { %]
+			[%= component.inputField %] = ([%= component.inputField.type %]) this.parent.findViewById(R.id.[%= component.inputField.layoutID %]);
+		[% } %]
+		[% if (component.outputField.isDefined() and component.outputField.size() > 0) { %]
+			[%= component.outputField %] = ([%= component.outputField.type %]) this.parent.findViewById(R.id.[%= component.outputField.layoutID %]);
+		[% } %]
+		[% if (component.sendButton.isDefined() and component.sendButton.size() > 0) { %]
+			[%= component.sendButton %] = ([%= component.sendButton.type %]) this.parent.findViewById(R.id.[%= component.sendButton.layoutID %]);
+			[%= component.sendButton %].setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					action(properties);
+				}
+			});
+		[% } %]
+	}
+
+	public void onMessage(String message) {
+		final String m = message;
+		parent.runOnUiThread(new Runnable() {
+			public void run() {
+				String output = [%= component.outputField %].getText().toString();
+				output += m;
+				[%= component.outputField %].setText(output);
+			}
+		});
+	}
+
+	@Override
+	public void action(HashMap<String, Object> properties) {
+		Log.i(TAG, "Send button clicked!");
+		String message = [%= component.inputField %].getText().toString();
+		String json = "{\"chat\" : { \"user\" : \"" + user + "\", \"message\" : \"" + message + "\" } }";
+
+		ServerConnection.getInstance().sendMessage(json);
+		[%= component.inputField %].setText("");
+	}
+}

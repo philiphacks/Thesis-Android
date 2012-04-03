@@ -43,7 +43,7 @@ Presentation DropboxLayout {
 		name = "LinearLayout";
 		orientation = "vertical";
 
-		children = [filename, downloadButton, notesText, addNotes];
+		children = [filename, downloadButton, notesText, addNotes, childLayout2];
 	}
 
 	TextView filename {
@@ -68,6 +68,7 @@ Presentation DropboxLayout {
 	}
 
 	ScrollView addNotes {
+		layoutID = "addNotes";
 		width = "fill_parent";
 		height = "0dip";
 		weight = "1";
@@ -130,11 +131,11 @@ Presentation ChatLayout {
 		width = "fill_parent";
 		height = "0dip";
 		weight = "1";
-		components = [textOutputView];
+		components = [textOutput];
 		text = "";
 	}
 
-	TextView textOutputView {
+	TextView textOutput {
 		layoutID = "textOutput";
 		width = "fill_parent";
 		height = "wrap_content";
@@ -156,10 +157,10 @@ Presentation ChatLayout {
 		paddingBottom="5dp";
 		baselineAligned="true";
 
-		children = [chatTextInput, sendChatMsg];
+		children = [textInput, sendButton];
 	}
 
-	EditText chatTextInput {
+	EditText textInput {
 		layoutID = "textInput";
 		weight = "1";
 		width = "0dip";
@@ -167,7 +168,7 @@ Presentation ChatLayout {
 		requestFocus = true;
 	}
 
-	Button sendChatMsg {
+	Button sendButton {
 		layoutID = "sendButton";
 		width = "125dp";
 		height = "45dp";

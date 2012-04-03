@@ -24,6 +24,18 @@ package [%= package %];
 		l.process();
 		l.generate(codePath+'src/' + path + 'ListDropboxContent.java');
 	%]
+	[%
+		for (p in Presentation.all) {
+			if (component.childActivity == p.activityname) {
+				t := TemplateFactory.load(basePath+'genLayout.egl');
+				t.populate('layout', p.layout);
+				t.populate('basePath',    basePath);
+				t.populate('compPath',    compPath);
+				t.process();
+				t.generate(codePath+'res/layout/' + p.layout.name + '.xml');
+			}
+		}
+	%]
 [% } %]
 
 import java.util.HashMap;
@@ -38,6 +50,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import be.pds.thesis.AndroidComponent;
+import be.pds.thesis.ChangeActivityAction;
 
 import com.dropbox.client2.DropboxAPI;
 import com.dropbox.client2.android.AndroidAuthSession;
@@ -51,7 +64,7 @@ public class DropboxComponent extends AndroidComponent {
 	final static private String ACCOUNT_PREFS_NAME = "prefs";
 	final static private String ACCESS_KEY_NAME = "ACCESS_KEY";
 	final static private String ACCESS_SECRET_NAME = "ACCESS_SECRET";
-	final static private String APP_KEY = [%= component.key %];
+	final static private String APP_KEY = "[%= component.key %]";
 	final static private String APP_SECRET = "[%= component.secret %]";
 	final static private AccessType ACCESS_TYPE = AccessType.APP_FOLDER;
 	private final String TAG = getClass().getName();
@@ -64,7 +77,7 @@ public class DropboxComponent extends AndroidComponent {
 	private Button getContentButton;
 	private ListView dirContent;
 	
-	private final String DIR = [%= component.folder %];
+	private final String DIR = "[%= component.folder %]";
 	
 	public DropboxComponent(Activity a) {
 		super(a);
@@ -75,6 +88,54 @@ public class DropboxComponent extends AndroidComponent {
 		dropboxButton = (Button) parent.findViewById(R.id.dropboxButton);
 		getContentButton = (Button) parent.findViewById(R.id.dirContentButton);
 		dirContent = (ListView) parent.findViewById(R.id.dirContent);
+		
+		[% if (component.uiactions.isDefined() and component.uiactions.size() > 0) { %]
+			[% for (a in component.uiactions) { %]
+				[% if (a.target.isTypeOf(Button)) { %]
+					final Activity parentAct = parent;
+					final HashMap<String, Object> props = properties;
+					[%= a.target %].setOnClickListener(new View.OnClickListener() {
+						@Override
+						public void onClick(View v) {
+[% for (action in a.actions) { %]
+	[% if (action.isTypeOf(CallComponentAction)) { %]
+		action(props);
+	[% } else if (action.isTypeOf(ChangeActivityAction)) { %]
+
+		properties.put("class", "[%= package %].[%= action.newActivity %]");
+		[% if (action.data.isDefined() and action.data.size() > 0) { %]
+			HashMap<String, String> data = new HashMap<String, String>();
+			[% for (d in action.data) { %]
+				[% if (d.isTypeOf(RawData)) { %]
+					data.put("[%= d.name %]", (String)"[%= d.value %]");
+				[% } else if (d.isTypeOf(CompData)) { %]
+					data.put("[%= d.name %]", (String)[%= d.comp %].getText());
+				[% } %]
+				properties.put("data", data);
+			[% } %]
+			[% if (action.condition.isDefined() and action.condition.size() > 0) { %]
+				[% for (c in action.condition) { %]
+					[% if (c.isTypeOf(CheckServerProperty)) { %]
+					if (ServerConnection.getInstance().checkServerProperty("[%= c.property.type %]")) {
+						ChangeActivityAction caa = new ChangeActivityAction(properties);
+						caa.setCallingActivity(parentAct);
+						caa.execute();
+					}
+					[% } %]
+				[% } %]
+			[% } %]
+		[% } else { %]
+			ChangeActivityAction caa = new ChangeActivityAction(properties);
+			caa.setCallingActivity(parentAct);
+			caa.execute();
+		[% } %]
+	[% } %]
+[% } %]
+						}
+					});
+				[% } %]
+			[% } %]
+		[% } %]
 		
 		dropboxButton.setOnClickListener(new View.OnClickListener() {
 

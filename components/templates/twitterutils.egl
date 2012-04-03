@@ -1,4 +1,4 @@
-package [%= dependency.package %];
+package [%= package %];
 
 import oauth.signpost.OAuth;
 import twitter4j.Twitter;

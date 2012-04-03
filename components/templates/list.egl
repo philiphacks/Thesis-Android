@@ -13,6 +13,19 @@ package [%= package %];
 		t.process();
 		t.generate(codePath+'src/' + path + component.childActivity + '.java');
 	%]
+
+	[%
+		for (p in Presentation.all) {
+			if (component.childActivity == p.activityname) {
+				t := TemplateFactory.load(basePath+'genLayout.egl');
+				t.populate('layout', p.layout);
+				t.populate('basePath',    basePath);
+				t.populate('compPath',    compPath);
+				t.process();
+				t.generate(codePath+'res/layout/' + p.layout.name + '.xml');
+			}
+		}
+	%]
 [% } %]
 
 import java.util.ArrayList;
@@ -59,7 +72,7 @@ public class ListComponent extends AndroidComponent {
 				String parent_mod = item.substring(0, item.length()-1);
 				Log.i(TAG, "PARENT = " + parent_mod);
 				Log.i(TAG, "Item " + parent_mod + " was clicked.");
-				Intent i = new Intent(parent.getApplicationContext(), [%= childActivity %].class);
+				Intent i = new Intent(parent.getApplicationContext(), [%= component.childActivity %].class);
 				i.putExtra("parent", parent_mod);
 				i.putExtra("type", ((GenericActivity)parent).getClassName());
 				

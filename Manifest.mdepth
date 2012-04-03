@@ -1,4 +1,3 @@
-
 Model Manifest {
 
 	Node ManifestDescription {
@@ -29,7 +28,7 @@ Model Manifest {
 		intent	: IntentFilter;
 	}
 
-	// http://developer.android.com/guide/topics/intents/intents-filters.html
+	// e.g. http://developer.android.com/guide/topics/intents/intents-filters.html
 	Node IntentFilter {
 		action 		: String="android.intent.action.MAIN";
 		category	: String="android.intent.category.LAUNCHER";

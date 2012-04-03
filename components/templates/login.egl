@@ -68,19 +68,19 @@ public class LoginComponent extends AndroidComponent {
 				[% if (d.isTypeOf(RawData)) { %]
 					data.put("[%= d.name %]", (String)"[%= d.value %]");
 				[% } else if (d.isTypeOf(CompData)) { %]
-					data.put("[%= d.name %]", (String)[%= d.comp %].getText());
+					data.put("[%= d.name %]", (String)[%= d.comp %].getText().toString());
 				[% } %]
 				properties.put("data", data);
 			[% } %]
-			[% if (action.condition.isDefined() and action.condition.size() > 0) { %]
-				[% for (c in action.condition) { %]
-					[% if (c.isTypeOf(CheckServerProperty)) { %]
-					if (ServerConnection.getInstance().checkServerProperty("[%= c.property.type %]")) {
-						ChangeActivityAction caa = new ChangeActivityAction(properties);
-						caa.setCallingActivity(parentAct);
-						caa.execute();
-					}
-					[% } %]
+		[% } %]
+		[% if (action.condition.isDefined() and action.condition.size() > 0) { %]
+			[% for (c in action.condition) { %]
+				[% if (c.isTypeOf(CheckServerProperty)) { %]
+				if (ServerConnection.getInstance().checkServerProperty("[%= c.property.type %]")) {
+					ChangeActivityAction caa = new ChangeActivityAction(properties);
+					caa.setCallingActivity(parentAct);
+					caa.execute();
+				}
 				[% } %]
 			[% } %]
 		[% } %]
@@ -97,7 +97,6 @@ public class LoginComponent extends AndroidComponent {
 		[% if (component.actions.isDefined() and component.actions.size() > 0) { %]
 			[% for (a in component.actions) { %]
 				[% if (a.isTypeOf(ExtractLayoutAction)) { %]
-					// TODO: make a class out of this?
 					properties.put("[%= a.name %]", [%= a.source %].getText().toString());
 				[% } %]
 			[% } %]
@@ -109,4 +108,7 @@ public class LoginComponent extends AndroidComponent {
 		String msg = "{\"auth\" : { \"user\" : \"" + properties.get("username") + "\", \"pass\" : \"" + properties.get("password") + "\" } }";
 		ServerConnection.getInstance().sendMessage(msg);
 	}
+
+	@Override
+	public void onMessage(String message) { }
 }

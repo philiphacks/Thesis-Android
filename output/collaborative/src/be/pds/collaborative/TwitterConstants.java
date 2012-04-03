@@ -1,6 +1,6 @@
 //package be.pds.twitter;
 
-package be.pds.twitter;
+package be.pds.collaborative;
 
 public class TwitterConstants {
 	//public static final String CONSUMER_KEY = "409941945-IGPMPuEaMfDB78J5zxOJrD9ydB2XQYBT7lfGCtec";

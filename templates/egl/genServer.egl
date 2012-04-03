@@ -39,7 +39,7 @@ var connections = [];
 
 server.on('connection', function (socket) {
 	//console.log(socket);
-	connections.push({'enabled' : 'false', 'user' : '', 'connection' : socket});
+	connections.push({'enabled' : 'false', 'user' : '', 'role' : 'user', 'connection' : socket});
 	socket.on('message', function (message) {
 		for (var i = connections.length - 1; i >= 0; i--) {
 			if (connections[i]['connection'] == socket) {
@@ -77,7 +77,12 @@ server.on('connection', function (socket) {
 							} else if (msg.addGenericNote) {
 								note.addNote(msg['addGenericNote'], connections);
 							} else if (msg.getGenericNotes) {
-								note.getNotes(msg['getGenericNotes'], connections[i]);
+								if (connections[i].role == 'admin') {
+									note.getNotes(msg['getGenericNotes'], connections[i]);
+								} else {
+									console.log('got generic notes request for a non-admin user');
+									note.getNotesForUser(msg['getGenericNotes'], connections[i]);
+								}
 							} else if (msg.getConnectedUsers) {
 								session.getConnectedUsers(connections, connections[i]);
 							} else if (msg.authed) {
@@ -108,21 +113,24 @@ server.on('connection', function (socket) {
 	});
 });
 
-function enableConnection(c, connections, user, error) {
+function enableConnection(c, connections, info, error) {
 	if (error) {
 		c['connection'].send("Wrong username/password");
 	} else {
-		console.log('connection for user ' + user + ' established successfully!');
+		console.log('connection for user ' + info['user'] + ' established successfully!');
 		c['enabled'] = 'true';
-		c['user'] = user;
+		c['user'] = info['user'];
+		c['role'] = info['role'];
 		authed = [];
 		authed['user'] = c['user'];
 
 		var msg = {};
 		msg['message'] = {};
 		msg['message']['type'] = "authed";
+		msg['message']['role'] = info['role'];
 		console.log('sending message ' + JSON.stringify(msg));
 		c['connection'].send(msg);
+		console.log('sent authentication message to user ' + user);
 		session.newConnectedUser(connections, c);
 	}
 }

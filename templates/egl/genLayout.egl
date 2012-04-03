@@ -11,6 +11,21 @@
 				android:orientation="[%= c.orientation %]"
 				android:layout_width="[%= c.width %]"
 				android:layout_height="[%= c.height %]"
+				[% if (c.paddingLeft.isDefined() and c.paddingLeft.size() > 0) { %]
+				android:paddingLeft="[%= c.paddingLeft %]"
+				[% } %]
+				[% if (c.paddingRight.isDefined() and c.paddingRight.size() > 0) { %]
+				android:paddingRight="[%= c.paddingRight %]"
+				[%}%]
+				[% if (c.paddingTop.isDefined() and c.paddingTop.size() > 0) { %]
+				android:paddingTop="[%= c.paddingTop %]"
+				[%}%]
+				[% if (c.paddingBottom.isDefined() and c.paddingBottom.size() > 0) { %]
+				android:paddingBottom="[%= c.paddingBottom %]"
+				[%}%]
+				[% if (c.weight.isDefined() and c.weight.size() > 0) { %]
+				android:layout_weight="[%= c.weight %]"
+				[%}%]
 				>
 
 				[% for (c2 in c.children) { %]
@@ -20,10 +35,56 @@
 						android:layout_height="[%= c2.height %]"
 						android:text="[%= c2.text %]"
 						android:gravity="[%= c2.gravity %]"
+						[% if (c2.paddingLeft.isDefined() and c2.paddingLeft.size() > 0) { %]
+						android:paddingLeft="[%= c2.paddingLeft %]"
+						[% } %]
+						[% if (c2.paddingRight.isDefined() and c2.paddingRight.size() > 0) { %]
+						android:paddingRight="[%= c2.paddingRight %]"
+						[%}%]
+						[% if (c2.paddingTop.isDefined() and c2.paddingTop.size() > 0) { %]
+						android:paddingTop="[%= c2.paddingTop %]"
+						[%}%]
+						[% if (c2.paddingBottom.isDefined() and c2.paddingBottom.size() > 0) { %]
+						android:paddingBottom="[%= c2.paddingBottom %]"
+						[%}%]
+						[% if (c2.weight.isDefined() and c2.weight.size() > 0) { %]
+						android:layout_weight="[%= c2.weight %]"
+						[%}%]
 					/>
 				[% } %]
 				
 			</[%= c.name %]>
+		[% } else if (c.isTypeOf(ScrollView)) { %]
+			<ScrollView
+				android:id="@+id/[%= c.layoutID %]"
+        		android:layout_width="fill_parent"
+        		android:layout_height="0dip" 
+        		android:layout_weight="1"  >
+        		[% for (child in c.components) { %]
+        			<[%= child.type %]
+						android:id="@+id/[%= child.layoutID %]"
+						android:layout_width="[%= child.width %]"
+						android:layout_height="[%= child.height %]"
+						android:text="[%= child.text %]"
+						android:gravity="[%= child.gravity %]"
+						[% if (child.paddingLeft.isDefined() and child.paddingLeft.size() > 0) { %]
+						android:paddingLeft="[%= child.paddingLeft %]"
+						[% } %]
+						[% if (child.paddingRight.isDefined() and child.paddingRight.size() > 0) { %]
+						android:paddingRight="[%= child.paddingRight %]"
+						[%}%]
+						[% if (child.paddingTop.isDefined() and child.paddingTop.size() > 0) { %]
+						android:paddingTop="[%= child.paddingTop %]"
+						[%}%]
+						[% if (child.paddingBottom.isDefined() and child.paddingBottom.size() > 0) { %]
+						android:paddingBottom="[%= child.paddingBottom %]"
+						[%}%]
+						[% if (child.weight.isDefined() and child.weight.size() > 0) { %]
+						android:layout_weight="[%= child.weight %]"
+						[%}%]
+					/>
+        		[% } %]
+        	</ScrollView>
 		[% } else { %]
 			<[%= c.type %]
 				android:id="@+id/[%= c.layoutID %]"
@@ -31,6 +92,21 @@
 				android:layout_height="[%= c.height %]"
 				android:text="[%= c.text %]"
 				android:gravity="[%= c.gravity %]"
+				[% if (c.paddingLeft.isDefined() and c.paddingLeft.size() > 0) { %]
+				android:paddingLeft="[%= c.paddingLeft %]"
+				[% } %]
+				[% if (c.paddingRight.isDefined() and c.paddingRight.size() > 0) { %]
+				android:paddingRight="[%= c.paddingRight %]"
+				[%}%]
+				[% if (c.paddingTop.isDefined() and c.paddingTop.size() > 0) { %]
+				android:paddingTop="[%= c.paddingTop %]"
+				[%}%]
+				[% if (c.paddingBottom.isDefined() and c.paddingBottom.size() > 0) { %]
+				android:paddingBottom="[%= c.paddingBottom %]"
+				[%}%]
+				[% if (c.weight.isDefined() and c.weight.size() > 0) { %]
+				android:layout_weight="[%= c.weight %]"
+				[%}%]
 			/>
 		[% } %]
 	[% } %]

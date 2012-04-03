@@ -6,16 +6,34 @@ import java.util.HashMap;
 
 import android.app.Activity;
 import android.view.View;
-import android.app.Activity;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.EditText;
+import android.widget.ScrollView;
+import android.widget.ListView;
+import android.widget.Toast;
+import android.util.Log;
 
+import com.dropbox.client2.android.AndroidAuthSession;
+import com.dropbox.client2.session.TokenPair;
+
+[% if (activity.isTypeOf(GenericActivity)) { %]
+public class [%= activity.name %] extends GenericActivity {
+[% } else if (activity.isTypeOf(MainActivity)) { %]
+public class [%= activity.name %] extends MainActivity {
+[% } else { %]
 public class [%= activity.name %] extends Activity {
+[% } %]
+
+	private final String TAG = getClass().getName();
+	private HashMap<String, Object> properties;
 
     [% for (c in activity.content) { %]
 	private [%= c.type %]Component [%= c %];
+    [% } %]
+    [% if (activity.userView.isDefined() and activity.userView.size() > 0) { %]
+    private TextView connectedUsersView;
     [% } %]
 
 	/** Called when the activity is first created. */
@@ -30,11 +48,26 @@ public class [%= activity.name %] extends Activity {
         [% if (activity.presentation.isDefined()) { %]
         setContentView(R.layout.[%= activity.presentation.layout.name %]);
         [% } %]
+        [% if (activity.registerToServer.isDefined() and activity.registerToServer.size() > 0) { %]
+			[% if (activity.registerToServer.isTypeOf(ChatActivity)) { %]
+				ServerConnection.getInstance().addComponent("chat", this);
+			[% } else if (activity.registerToServer.isTypeOf(DropboxActivity)) { %]
+				ServerConnection.getInstance().addComponent("dropbox", this);
+			[% } else if (activity.registerToServer.isTypeOf(ListActivity)) { %]
+				ServerConnection.getInstance().addComponent(this.getClassName(), this);
+			[% } %]
+		[% } %]
+        properties = new HashMap<String, Object>();
+        [% if (activity.content.isDefined() and activity.content.size() > 0) { %]
         [% for (c in activity.content) { %]
 			[%= c %] = new [%= c.type %]Component(this);
     	[% } %]
+    	[% } %]
+    	
 		[% for (c in activity.presentation.layout.layoutType.children) { %]
+			[% if (not(c.isTypeOf(LayoutType))) { %]
 			[%= c.type %] [%= c %] = ([%= c.type %]) this.findViewById(R.id.[%= c.layoutID %]);
+			[% } %]
 		[% } %]
 
     	[% if (Trigger.isDefined()) { %]
@@ -57,7 +90,100 @@ public class [%= activity.name %] extends Activity {
 				[% } %]
 			[% } %]
 		[% } %]
+		[% if (activity.onClickListeners.isDefined() and activity.onClickListeners.size() > 0) { %]
+			final Activity parentAct = this;
+			[% for (c in activity.onClickListeners) { %]
+				[%= c.target %].setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						[% for (action in c.actions) { %]
+							[% if (action.isTypeOf(ChangeActivityAction)) { %]
+								properties.put("class", "[%= application.manifest.package %].[%= action.newActivity %]");
+								[% if (action.data.isDefined() and action.data.size() > 0) { %]
+									HashMap<String, String> data = new HashMap<String, String>();
+									[% for (d in action.data) { %]
+										[% if (d.isTypeOf(RawData)) { %]
+											data.put("[%= d.name %]", (String)"[%= d.value %]");
+										[% } else if (d.isTypeOf(CompData)) { %]
+											data.put("[%= d.name %]", (String)[%= d.comp %].getText().toString());
+										[% } %]
+										properties.put("data", data);
+									[% } %]
+								[% } %]
+								ChangeActivityAction caa = new ChangeActivityAction(properties);
+								caa.setCallingActivity(parentAct);
+								caa.execute();
+							[% } else if (action.isTypeOf(EndActivityAction)) { %]
+								[% if (action.notifyServer) { %]
+									ServerConnection.getInstance().quit();
+								[% } %]
+								finish();
+							[% } %]
+						[% } %]
+					}
+				});
+			[% } %]
+		[% } %]
+
+		[% if (activity.userView.isDefined() and activity.userView.size() > 0) { %]
+			ServerConnection.getInstance().addComponent("users", this);
+			connectedUsersView = (TextView) this.findViewById(R.id.connectedUsers);
+			ServerConnection.getInstance().getConnectedUsers();
+		[% } %]
     }
+
+    [% if (activity.userView.isDefined() and activity.userView.size() > 0) { %]
+    public void setConnectedUsers(final String message) {
+    	runOnUiThread(new Runnable() {
+			public void run() {
+				String output = connectedUsersView.getText().toString();
+				output += message;
+				connectedUsersView.setText(output);
+			}
+		});
+    }
+    [% } %]
+
+    private void showToast(String msg) {
+    	Toast error = Toast.makeText(this, msg, Toast.LENGTH_LONG);
+    	error.show();
+    }
+
+    [% if (activity.isTypeOf(GenericActivity)) { %]
+	@Override
+	public void onMessage(String user, String message) {
+		
+	}
+    [% } %]
+
+    [% if (activity.content.isDefined() and activity.content.size() == 1) { %]
+    [% for (c in activity.content) { %]
+    	[% if (c.isTypeOf(Dropbox)) { %]
+    	@Override
+	    protected void onResume() {
+	    	super.onResume();
+	    	if (dropbox != null) {
+	    		AndroidAuthSession session = dropbox.getApi().getSession();
+	    		if (session.authenticationSuccessful()) {
+	    			try {
+	    				session.finishAuthentication();
+
+	    				TokenPair tokens = session.getAccessTokenPair();
+	    				dropbox.storeKeys(tokens.key, tokens.secret);
+	    				dropbox.setLoggedIn(true);
+	    			} catch (IllegalStateException e) {
+	    				showToast("Couldn't authenticate with Dropbox:" + e.getLocalizedMessage());
+	    				Log.i(TAG, "Error authenticating", e);
+	    			}
+	    		}
+	    	}
+	    }
+    	[% } %]
+		public [%= c.type %]Component getComponent() {
+			return [%= c %];
+		}
+    [% } %]
+    [% } %]
 
 	[%
 	// generate new classpath file
@@ -73,7 +199,6 @@ public class [%= activity.name %] extends Activity {
 		}
 
 		var t : Template := TemplateFactory.load(compPath+c.gencodetemplate);
-		"generating components".println();
 		t.populate('component', c);
 		c.gencodetemplate.println();
 		t.populate('name', activity.name);

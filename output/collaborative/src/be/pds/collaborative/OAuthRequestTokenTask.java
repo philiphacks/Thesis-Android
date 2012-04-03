@@ -1,6 +1,6 @@
 //package be.pds.twitter;
 
-package be.pds.twitter;
+package be.pds.collaborative;
 
 import oauth.signpost.OAuthConsumer;
 import oauth.signpost.OAuthProvider;

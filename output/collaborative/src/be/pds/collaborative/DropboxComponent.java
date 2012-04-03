@@ -13,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import be.pds.thesis.AndroidComponent;
+import be.pds.thesis.ChangeActivityAction;
 
 import com.dropbox.client2.DropboxAPI;
 import com.dropbox.client2.android.AndroidAuthSession;
@@ -26,7 +27,7 @@ public class DropboxComponent extends AndroidComponent {
 	final static private String ACCOUNT_PREFS_NAME = "prefs";
 	final static private String ACCESS_KEY_NAME = "ACCESS_KEY";
 	final static private String ACCESS_SECRET_NAME = "ACCESS_SECRET";
-	final static private String APP_KEY = 1yb8hkeirab3iq9;
+	final static private String APP_KEY = "1yb8hkeirab3iq9";
 	final static private String APP_SECRET = "pk2w9wbnhnfh112";
 	final static private AccessType ACCESS_TYPE = AccessType.APP_FOLDER;
 	private final String TAG = getClass().getName();
@@ -39,7 +40,7 @@ public class DropboxComponent extends AndroidComponent {
 	private Button getContentButton;
 	private ListView dirContent;
 	
-	private final String DIR = /Thesis/;
+	private final String DIR = "/Thesis/";
 	
 	public DropboxComponent(Activity a) {
 		super(a);
@@ -50,6 +51,7 @@ public class DropboxComponent extends AndroidComponent {
 		dropboxButton = (Button) parent.findViewById(R.id.dropboxButton);
 		getContentButton = (Button) parent.findViewById(R.id.dirContentButton);
 		dirContent = (ListView) parent.findViewById(R.id.dirContent);
+		
 		
 		dropboxButton.setOnClickListener(new View.OnClickListener() {
 

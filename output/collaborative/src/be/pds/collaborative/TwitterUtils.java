@@ -1,6 +1,6 @@
 //package be.pds.twitter;
 
-package be.pds.twitter;
+package be.pds.collaborative;
 
 import oauth.signpost.OAuth;
 import twitter4j.Twitter;

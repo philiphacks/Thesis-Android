@@ -1,12 +1,14 @@
-
 exports.authenticate = function (info, connections, connection, fn) {
-	if (info['user'] == 'phil' && info['pass'] == 'foobar') {
-		console.log('Authenticated user!');
-		fn(connection, connections, info['user'], null);
-	} else if (info['user'] == 'juan' && info['pass'] == 'foobar') {
-		console.log('Authenticated user!');
-		fn(connection, connections, info['user'], null);
-	} else {
+	var authed = false;
+	[% for (u in session.users) { %]
+		if (info['user'] == '[%= u.username %]' && info['pass'] == '[%= u.password %]') {
+			console.log('Authenticated user!');
+			authed = true;
+			info['role'] = '[%= u.role %]';
+			fn(connection, connections, info, null);
+		}
+	[% } %]
+	if (!authed) {
 		fn(connection, connections, null, 'Wrong username/password');
 	}
 }

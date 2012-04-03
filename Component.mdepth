@@ -17,6 +17,7 @@ Model Component@2 {
 		layoutID		: String;
 		text 			: String;
 		gravity			: String;
+		weight			: String;
 
 		paddingLeft 	: String;
 		paddingRight	: String;
@@ -29,7 +30,6 @@ Model Component@2 {
 	Node LayoutComponent@2 : Layout {
 		width			: String;
 		height			: String;
-		weight			: String;
 	}
 
 	// Component for regular Java classes that have a dependency with an Android component/activity

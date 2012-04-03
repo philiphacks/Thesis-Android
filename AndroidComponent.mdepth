@@ -9,7 +9,7 @@ Model AndroidComponent@2 imports Component, AndroidAction, UIAction {
 		gencodetemplate@1 		: String;
 
 		package@1 				: String;
-		layoutcomponents@2 		: LayoutComponent@0[*];
+		layoutcomponents@2 		: Layout@0[*];
 
 		// Trigger can be another component (e.g. GeoComponent)
 		trigger 				: AComp@0;

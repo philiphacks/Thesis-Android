@@ -48,7 +48,7 @@ public class DropboxItemActivity extends Activity {
 			public void onClick(View v) {
 				// http://dl.dropbox.com/u/<your users uid>/<path under /Public>/filename
 				try {
-					URL url = new URL("http://dl.dropbox.com/u/" + dropboxId + /Thesis/ + file);
+					URL url = new URL("http://dl.dropbox.com/u/" + dropboxId + "/Thesis/" + file);
 					try {
 						URLConnection ucon = url.openConnection();
 						InputStream is = ucon.getInputStream();

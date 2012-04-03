@@ -10,9 +10,6 @@ import net.tootallnate.websocket.WebSocketClient;
 import net.tootallnate.websocket.drafts.Draft_10;
 import android.app.Activity;
 import android.util.Log;
-import be.pds.collaborative.ChatActivity;
-import be.pds.collaborative.ChatComponent;
-import be.pds.collaborative.DropboxItemActivity;
 import be.pds.collaborative.MainActivity;
 import be.pds.thesis.User.Role;
 
@@ -76,18 +73,24 @@ public class ServerConnection {
 					
 					if (type.equals(AUTH_MESSAGE)) {
 						authed = true;
-						user = new User(m.getMessage().getUser(), Role.ADMIN);
-						Log.i(TAG, "Authentication successful.");
+						Role r = Role.USER;
+						Log.i(TAG, "Parsing auth message.");
+						String role = m.getMessage().getRole();
+						if (role != null && role.equals("admin")) {
+							r = Role.ADMIN;
+						}
+						user = new User(m.getMessage().getUser(), r);
+						Log.i(TAG, "Authentication successful for user " + user.getUser());
 						available.release();						
 					} else if (type.equals(CHAT_MESSAGE)) {
 						Log.i(TAG, "Got new chat message");
 						String msg = m.getMessage().getUser() + ": " + m.getMessage().getMessage() + "\n";
-						ChatComponent comp = ((ChatActivity) components.get(type)).getComponent();
+						AndroidComponent comp = ((GenericActivity) components.get(type)).getComponent();
 						comp.onMessage(msg);
 					} else if (type.equals(DROPBOX_NOTE)) {
 						Log.i(TAG, "Got new dropbox message");
-						DropboxItemActivity comp = (DropboxItemActivity) components.get(type);
-						comp.addNote(m.getMessage().getUser(), m.getMessage().getMessage());
+						GenericActivity comp = (GenericActivity) components.get(type);
+						comp.onMessage(m.getMessage().getUser(), m.getMessage().getMessage());
 					} else if (type.equals(SESSION_MESSAGE)) {
 						Log.i(TAG, "Got new session info");
 						MainActivity comp = (MainActivity) components.get(type);
@@ -105,7 +108,11 @@ public class ServerConnection {
 						try {
 							String msg = m.getMessage().getMessage() + "\n";
 							AndroidComponent comp = ((GenericActivity) components.get(type)).getComponent();
-							comp.onMessage(msg);
+							if (comp != null) {
+								comp.onMessage(msg);
+							} else {
+								Log.i(TAG, "Something went wrong...");
+							}
 						} catch (IllegalArgumentException e) {
 							e.printStackTrace();
 						} catch (SecurityException e) {
@@ -148,7 +155,7 @@ public class ServerConnection {
 	}
 
 	public void quit() {
-		String message = "{\"quit\" : { \"user\" : \"phil\" } }";
+		String message = "{\"quit\" : { \"user\" : \"" + user.getUser() + "\" } }";
 		sendMessage(message);
 		authed = false;
 	}
@@ -192,11 +199,11 @@ public class ServerConnection {
 	}
 	
 	public void getLastMessages() {
-		sendMessage("{ \"lastMessages\" : { \"user\" : \"" + user + "\" } }");
+		sendMessage("{ \"lastMessages\" : { \"user\" : \"" + user.getUser() + "\" } }");
 	}
 	
 	public void addDropboxNote(String file, String note) {
-		String json = "{\"addFileNote\" : { \"file\" : \"" + file + "\", \"user\" : \"" + user + "\", \"text\" : \"" + note + "\" } }";
+		String json = "{\"addFileNote\" : { \"file\" : \"" + file + "\", \"user\" : \"" + user.getUser() + "\", \"text\" : \"" + note + "\" } }";
 		sendMessage(json);
 	}
 	
@@ -210,12 +217,12 @@ public class ServerConnection {
 		String type = (String)properties.get("type");
 		String parent = (String)properties.get("parent");
 		String text = (String)properties.get("text");
-		String json = "{\"addGenericNote\" : { \"type\" : \"" + type + "\", \"parent\" : \"" + parent + "\", \"user\" : \"" + user + "\", \"text\" : \"" + text + "\" } }";
+		String json = "{\"addGenericNote\" : { \"type\" : \"" + type + "\", \"parent\" : \"" + parent + "\", \"user\" : \"" + user.getUser() + "\", \"text\" : \"" + text + "\" } }";
 		sendMessage(json);
 	}
 	
 	public void addGenericNote(String type, String parent, String text) {
-		String json = "{\"addGenericNote\" : { \"type\" : \"" + type + "\", \"parent\" : \"" + parent + "\", \"user\" : \"" + user + "\", \"text\" : \"" + text + "\" } }";
+		String json = "{\"addGenericNote\" : { \"type\" : \"" + type + "\", \"parent\" : \"" + parent + "\", \"user\" : \"" + user.getUser() + "\", \"text\" : \"" + text + "\" } }";
 		sendMessage(json);
 	}
 	
@@ -254,6 +261,7 @@ public class ServerConnection {
 			private String file;
 			private String message;
 			private String user;
+			private String role;
 
 			public String getType() {
 				return this.type;
@@ -287,6 +295,14 @@ public class ServerConnection {
 				this.user = user;
 			}
 			
+			public String getRole() {
+				return this.role;
+			}
+
+			public void setRole(String role) {
+				this.role = role;
+			}
+
 			public String getFile() {
 				return this.file;
 			}

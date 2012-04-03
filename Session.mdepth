@@ -13,7 +13,9 @@ Model Session {
 		role 			: Role;
 	}
 
-	Node Role {
-		name 		: String;
-	}
+	abstract Node Role { }
+
+	Node AdminRole : Role { }
+
+	Node UserRole : Role { }
 }

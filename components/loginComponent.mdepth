@@ -11,4 +11,5 @@ AndroidComponent loginComponent {
 		username		: String;
 		password 		: String;
 	}
+
 }

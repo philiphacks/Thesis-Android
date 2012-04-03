@@ -7,15 +7,27 @@
 
 			<ScrollView
 				android:id="@+id/scrollChat"
-				android:layout_width="fill_parent"
-				android:layout_height="0dip"
-				android:text=""
-				android:gravity=""
-			/>
+        		android:layout_width="fill_parent"
+        		android:layout_height="0dip" 
+        		android:layout_weight="1"  >
+        			<TextView
+						android:id="@+id/textOutput"
+						android:layout_width="fill_parent"
+						android:layout_height="wrap_content"
+						android:text=""
+						android:gravity=""
+						android:paddingLeft="5dp"
+						android:paddingRight="5dp"
+						android:paddingTop="5dp"
+					/>
+        	</ScrollView>
 			<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
 				android:orientation="horizontal"
 				android:layout_width="fill_parent"
 				android:layout_height="wrap_content"
+				android:paddingLeft="5dp"
+				android:paddingRight="5dp"
+				android:paddingBottom="5dp"
 				>
 
 					<EditText
@@ -24,6 +36,7 @@
 						android:layout_height="45dp"
 						android:text=""
 						android:gravity=""
+						android:layout_weight="1"
 					/>
 					<Button
 						android:id="@+id/sendButton"

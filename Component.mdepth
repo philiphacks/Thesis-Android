@@ -1,16 +1,11 @@
 Model Component@2 {
 	
 	abstract Node ComponentType {
-		ctype@1		: String{id};
+		ctype@1		: String[0..1]{id};
 	}
 
 	Node Component : ComponentType {
 		name			: String;
-	}
-
-	Node ComponentData@1 {
-		name 		: String;
-		value 		: String;
 	}
 
 	Node Layout : Component {
@@ -24,6 +19,7 @@ Model Component@2 {
 		paddingTop 		: String;
 		paddingBottom 	: String;
 		baselineAligned : String;
+		password 		: boolean;
 	}
 
 	// e.g. Button, EditText, TextView, ...

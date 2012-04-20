@@ -210,7 +210,7 @@ Presentation LoginLayout {
 		layoutID = "passwordText";
 		width = "fill_parent";
 		height = "wrap_content";
-		password = "true";
+		password = true;
 	}
 
 	Button loginButton {

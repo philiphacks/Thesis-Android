@@ -11,6 +11,9 @@
 				android:orientation="[%= c.orientation %]"
 				android:layout_width="[%= c.width %]"
 				android:layout_height="[%= c.height %]"
+				[% if (c.password.isDefined() and c.password.size() > 0) { %]
+				android:password="[%= c.password %]"
+				[% } %]
 				[% if (c.paddingLeft.isDefined() and c.paddingLeft.size() > 0) { %]
 				android:paddingLeft="[%= c.paddingLeft %]"
 				[% } %]
@@ -35,6 +38,9 @@
 						android:layout_height="[%= c2.height %]"
 						android:text="[%= c2.text %]"
 						android:gravity="[%= c2.gravity %]"
+						[% if (c2.password.isDefined() and c2.password.size() > 0) { %]
+						android:password="[%= c2.password %]"
+						[% } %]
 						[% if (c2.paddingLeft.isDefined() and c2.paddingLeft.size() > 0) { %]
 						android:paddingLeft="[%= c2.paddingLeft %]"
 						[% } %]
@@ -67,6 +73,9 @@
 						android:layout_height="[%= child.height %]"
 						android:text="[%= child.text %]"
 						android:gravity="[%= child.gravity %]"
+						[% if (child.password.isDefined() and child.password.size() > 0) { %]
+						android:password="[%= child.password %]"
+						[% } %]
 						[% if (child.paddingLeft.isDefined() and child.paddingLeft.size() > 0) { %]
 						android:paddingLeft="[%= child.paddingLeft %]"
 						[% } %]
@@ -92,6 +101,9 @@
 				android:layout_height="[%= c.height %]"
 				android:text="[%= c.text %]"
 				android:gravity="[%= c.gravity %]"
+				[% if (c.password.isDefined() and c.password.size() > 0) { %]
+				android:password="[%= c.password %]"
+				[% } %]
 				[% if (c.paddingLeft.isDefined() and c.paddingLeft.size() > 0) { %]
 				android:paddingLeft="[%= c.paddingLeft %]"
 				[% } %]

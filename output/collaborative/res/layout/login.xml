@@ -32,6 +32,7 @@
 				android:layout_height="wrap_content"
 				android:text=""
 				android:gravity=""
+				android:password="true"
 			/>
 			<Button
 				android:id="@+id/loginButton"

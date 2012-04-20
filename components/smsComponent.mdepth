@@ -7,16 +7,11 @@ AndroidComponent smsComponent {
 		gencodetemplate = "sms.egl";
 		ctype = "sms";
 
-		properties = [phone, message];
+		phone 			: String;
+		message 		: String;
+		phoneField 		: Layout@0[1];
+		messageField 	: Layout@0[1];
+		sendButton 		: Layout@0[1];
 	}
 
-	ComponentData phone {
-		name = "phone";
-		value = "5664";
-	}
-
-	ComponentData message {
-		name = "message";
-		value = "This is a default text message.";
-	}
 }

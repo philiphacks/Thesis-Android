@@ -40,7 +40,7 @@ public class LoginComponent extends AndroidComponent {
 						public void onClick(View v) {
 		action(props);
 
-		properties.put("class", "be.pds.collaborative.MainActivity");
+		properties.put("class", "be.pds.collaborative.Main");
 			HashMap<String, String> data = new HashMap<String, String>();
 					data.put("user", (String)usernameText.getText().toString());
 				properties.put("data", data);

@@ -62,6 +62,15 @@ public class MainActivity extends MainActivity {
 								caa.execute();
 					}
 				});
+				listButton.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+								properties.put("class", "be.pds.collaborative.ListActivity");
+								ChangeActivityAction caa = new ChangeActivityAction(properties);
+								caa.setCallingActivity(parentAct);
+								caa.execute();
+					}
+				});
 				logoutButton.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View v) {

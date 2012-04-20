@@ -10,7 +10,6 @@ import net.tootallnate.websocket.WebSocketClient;
 import net.tootallnate.websocket.drafts.Draft_10;
 import android.app.Activity;
 import android.util.Log;
-import be.pds.collaborative.MainActivity;
 import be.pds.thesis.User.Role;
 
 import com.google.gson.Gson;
@@ -188,6 +187,7 @@ public class ServerConnection {
 		if (property.equals("LoginProperty")) {
 			sendMessage("{\"authed\" : { \"user\" : \"" + user + "\" } }");
 			try {
+				Thread.sleep(500);
 				available.acquire();
 			} catch (InterruptedException e) {
 				e.printStackTrace();

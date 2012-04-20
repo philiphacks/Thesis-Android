@@ -18,8 +18,6 @@ Model AndroidComponent@2 imports Component, AndroidAction, UIAction {
 		// a component could be the trigger of another component or a layoutcomponent
 		isTriggerOf 			: AComp@0;
 		dependencies@1 			: DependencyComponent[*];
-
-		properties@1 			: ComponentData[*];
 		
 		// actions extend the action() method, so users can extend a component's functionality
 		actions 				: Action[*];

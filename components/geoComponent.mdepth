@@ -8,12 +8,7 @@ AndroidComponent geoComponent imports Presentation {
 		ctype = "geo";
 
 		callback : String;
-
-		properties = [location]; 
+		location : String;
 	}
 
-	ComponentData location {
-		name = "location";
-		value = "4,5";
-	}
 }

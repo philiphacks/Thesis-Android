@@ -1,5 +1,19 @@
 var app = require('./main');
 
+var notes = [];
+var n = {};
+[% for (c in content) { %]
+	[% if (c.items.isDefined() and c.items.size() > 0) { %]
+		[% for (i in c.items) { %]
+			n['type'] = "[%= i.type %]";
+			n['parent'] = "null";
+			n['text'] = "[%= i.text %]";
+			n['user'] = "dummy";
+			notes.push(n);
+		[% } %]
+	[% } %]
+[% } %]
+
 exports.addNote = function (note, connections) {
 	console.log('adding new note: ' + JSON.stringify(note));
 	new app.Note({type: note.type, parent: note.parent, text: note.text,
@@ -26,6 +40,19 @@ exports.addNote = function (note, connections) {
 			console.log(note.user + ' is creating note "' + note.text + '"');
 		}
 	});
+}
+
+exports.initNotes = function () {
+	for (n in notes) {
+		var note = notes[n];
+		new app.Note({type: note.type, parent: note.parent, text: note.text,
+			user: note.user, date: new Date()}).save(function(err) {
+			if (err) {
+				console.log(err);
+				console.log('couldn\'t save note');
+			}
+		});
+	}
 }
 
 exports.getNotes = function (note, connection) {
@@ -60,20 +87,36 @@ exports.getNotesForUser = function (note, connection) {
 		console.log("Request for notes with parent " + note.parent);
 		parent = note.parent;
 		type = "genchild";
-	}
-	app.Note.find({type: note.type, parent: parent, user: connection.user}, function (err, notes) {
-		for (var i = 0; i < notes.length; i++) {
-			var no = {};
-			no['message'] = {};
-			no['message']['type'] = type;
-			if (type == "genchild") {
-				no['message']['genericType'] = note.type;
+		app.Note.find({type: note.type, parent: parent, user: connection.user}, function (err, notes) {
+			for (var i = 0; i < notes.length; i++) {
+				var no = {};
+				no['message'] = {};
+				no['message']['type'] = type;
+				if (type == "genchild") {
+					no['message']['genericType'] = note.type;
+				}
+				no['message']['parent'] = parent;
+				no['message']['user'] = notes[i].user;
+				no['message']['message'] = notes[i].text;
+				console.log(JSON.stringify(no));
+				connection['connection'].send(JSON.stringify(no));
 			}
-			no['message']['parent'] = parent;
-			no['message']['user'] = notes[i].user;
-			no['message']['message'] = notes[i].text;
-			console.log(JSON.stringify(no));
-			connection['connection'].send(JSON.stringify(no));
-		}
-	});
+		});
+	} else {
+		app.Note.find({type: note.type, parent: parent}, function (err, notes) {
+			for (var i = 0; i < notes.length; i++) {
+				var no = {};
+				no['message'] = {};
+				no['message']['type'] = type;
+				if (type == "genchild") {
+					no['message']['genericType'] = note.type;
+				}
+				no['message']['parent'] = parent;
+				no['message']['user'] = notes[i].user;
+				no['message']['message'] = notes[i].text;
+				console.log(JSON.stringify(no));
+				connection['connection'].send(JSON.stringify(no));
+			}
+		});
+	}
 }

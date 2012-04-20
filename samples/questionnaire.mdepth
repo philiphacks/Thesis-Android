@@ -131,6 +131,12 @@ GlueComponent myComp imports LoginActions, TestUIActions {
 
 	List list {
 		childActivity = "MainChildActivity";
+		items = [li];
+	}
+
+	ListItem li {
+		text = "A dummy item.";
+		type = "MainActivity";
 	}
 }
 

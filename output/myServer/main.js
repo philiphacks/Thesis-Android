@@ -130,7 +130,7 @@ function enableConnection(c, connections, info, error) {
 		msg['message']['role'] = info['role'];
 		console.log('sending message ' + JSON.stringify(msg));
 		c['connection'].send(msg);
-		console.log('sent authentication message to user ' + user);
+		console.log('sent authentication message to user ' + info['user']);
 		session.newConnectedUser(connections, c);
 	}
 }

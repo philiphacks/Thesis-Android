@@ -34,9 +34,7 @@ public class [%= name %] extends GenericActivity {
         	type = extras.getString("type");
         	parent = extras.getString("parent");
         	Log.i(TAG, "Parent: " + parent);
-        	if (ServerConnection.getInstance().isAdminConnection()) {
-        		ServerConnection.getInstance().getGenericNotes(className, parent);
-        	}
+        	ServerConnection.getInstance().getGenericNotes(className, parent);
         	TextView parentItem = (TextView) findViewById(R.id.parentItem);
         	parentItem.setText("Items for " + parent);
         }
@@ -57,9 +55,7 @@ public class [%= name %] extends GenericActivity {
     @Override
 	protected void onRestart() {
     	super.onRestart();
-    	if (ServerConnection.getInstance().isAdminConnection()) {
-    		ServerConnection.getInstance().getGenericNotes(className, parent);
-    	}
+    	ServerConnection.getInstance().getGenericNotes(className, parent);
 	}
 
 	public void onMessage(final String user, final String note) {

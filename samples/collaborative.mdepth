@@ -24,7 +24,7 @@ Manifest TestManifest {
 	}
 
 	Activity a2 {
-		name = ".MainActivity";
+		name = ".Main";
 	}
 
 	Activity a3 {
@@ -171,7 +171,7 @@ Presentation TestPresentation imports DropboxLayout, ChatLayout, LoginLayout, Ge
 	}
 
 	Presentation pres2 {
-		activityname = "MainActivity";
+		activityname = "Main";
 		layout = l2;
 	}
 
@@ -222,7 +222,7 @@ AndroidAction LayoutActions imports TestData {
 
 	ChangeActivityAction toMainAct {
 		oldActivity = "LoginActivity";
-		newActivity = "MainActivity";
+		newActivity = "Main";
 		data = [passData];
 		condition = [csp];
 	}
@@ -232,13 +232,18 @@ AndroidAction LayoutActions imports TestData {
 	}
 
 	ChangeActivityAction toChatAct {
-		oldActivity = "MainActivity";
+		oldActivity = "Main";
 		newActivity = "ChatActivity";
 	}
 
 	ChangeActivityAction toDropboxAct {
-		oldActivity = "MainActivity";
+		oldActivity = "Main";
 		newActivity = "DropboxActivity";
+	}
+
+	ChangeActivityAction toListAct {
+		oldActivity = "Main";
+		newActivity = "ListActivity";
 	}
 
 	EndActivityAction toLoginAct {
@@ -277,6 +282,11 @@ UIAction TestUIActions imports LayoutActions, TestPresentation {
 	OnClickListener triggerDropbox {
 		target = documentsButton;
 		actions = [toDropboxAct];
+	}
+
+	OnClickListener triggerGoals {
+		target = listButton;
+		actions = [toListAct];
 	}
 
 	OnClickListener triggerLogout {
@@ -366,6 +376,7 @@ Server myServer imports mySession, myComp {
 	}
 
 	ChatActivity ca { }
+	ListActivity la { }
 }
 
 // ACTIVITIES -----------------------------------------------------------------
@@ -380,12 +391,12 @@ Activity TestActivity imports myComp, TestPresentation, TestUIActions, LoginActi
 	}
 
 	MainActivity act2 {
-		name = "MainActivity";
+		name = "Main";
 		main = false;
 
 		content = [twitter];
 		presentation = pres2;
-		onClickListeners = [triggerChat, triggerDropbox, triggerLogout];
+		onClickListeners = [triggerChat, triggerDropbox, triggerGoals, triggerLogout];
 		userView = connectedUsers;
 	}
 
@@ -412,6 +423,7 @@ Activity TestActivity imports myComp, TestPresentation, TestUIActions, LoginActi
 
 		content = [list];
 		presentation = pres5;
+		registerToServer = la;
 	}
 
 }

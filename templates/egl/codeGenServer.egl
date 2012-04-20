@@ -41,6 +41,7 @@
 	s := TemplateFactory.load(compPath+'noteServer.egl');
 	s.populate('basePath',    basePath);
 	s.populate('compPath',    compPath);
+	s.populate('content', app.server.components);
 	s.process();
 	s.generate(codePath+'note.js');
 

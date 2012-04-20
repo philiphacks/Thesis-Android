@@ -1,6 +1,6 @@
-load "AndroidComponent"
+load "Component"
 
-AndroidComponent smsComponent {
+AndroidComponent smsComponent imports Component {
 	
 	AComp SMS {
 		package = "be.pds.sms";

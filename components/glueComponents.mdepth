@@ -3,7 +3,6 @@ load "components/geoComponent"
 load "components/timerComponent"
 load "components/twitterComponent"
 load "components/foursquareComponent"
-load "components/facebookComponent"
 load "components/loginComponent"
 load "components/chatComponent"
 load "components/dropboxComponent"
@@ -14,7 +13,6 @@ AndroidComponent GlueComponent imports smsComponent,
 									   timerComponent,
 									   twitterComponent,
 									   foursquareComponent,
-									   facebookComponent,
 									   loginComponent,
 									   chatComponent,
 									   dropboxComponent,

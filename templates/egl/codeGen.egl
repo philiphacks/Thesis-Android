@@ -25,9 +25,11 @@
 	if (application.activities.isDefined() and application.activities.size() > 0) {
 		for (activity in application.activities) {
 			if (activity.main == true) {
-				"populating server var".println();
-				if (application.server.isDefined()) {
+				if (application.server.isDefined() and application.server.size() > 0) {
+					"Populating server variable".println();
 					t.populate('server', application.server);
+				} else {
+					"No server configured, skipping...".println();
 				}
 			}
 			t.populate('activity', activity);

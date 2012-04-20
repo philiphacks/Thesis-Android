@@ -6,5 +6,5 @@ Model Application imports Activity, Manifest, Server {
 	name			: String;
 	manifest		: ManifestDescription[1];
 	activities		: Activity[*];
-	server 			: Server[1];
+	server 			: Server[0..1];
 }

@@ -8,7 +8,7 @@
 		<classpathentry kind="lib" path="/Users/philip/metadepth/collaborative/libraries/httpclient-4.0.1.jar"/>
 		<classpathentry kind="lib" path="/Users/philip/metadepth/collaborative/libraries/signpost-commonshttp4-1.2.1.1.jar"/>
 		<classpathentry kind="lib" path="/Users/philip/metadepth/collaborative/libraries/signpost-core-1.2.1.1.jar"/>
-		<classpathentry kind="lib" path="/Users/philip/metadepth/collaborative/libraries/twitter4j-android-2.2.5/lib/twitter4j-core-android-2.2.5.jar"/>
+		<classpathentry kind="lib" path="/Users/philip/metadepth/collaborative/libraries/twitter4j-core-android-2.2.5.jar"/>
 	[% } %]
 [% } %]
 	<classpathentry kind="lib" path="/Users/philip/metadepth/collaborative/libraries/dropbox-android-sdk-1.2.3.jar"/>

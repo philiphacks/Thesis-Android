@@ -2,6 +2,11 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
-	
+
+	<classpathentry kind="lib" path="/Users/philip/metadepth/collaborative/libraries/dropbox-android-sdk-1.2.3.jar"/>
+	<classpathentry kind="lib" path="/Users/philip/metadepth/collaborative/libraries/httpmime-4.0.3.jar"/>
+	<classpathentry kind="lib" path="/Users/philip/metadepth/collaborative/libraries/json_simple-1.1.jar"/>
+	<classpathentry kind="lib" path="/Users/philip/metadepth/collaborative/libraries/gson-2.1.jar"/>
+	<classpathentry kind="lib" path="/Users/philip/metadepth/collaborative/libraries/WebSocket.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

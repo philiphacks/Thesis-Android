@@ -126,13 +126,11 @@ Presentation TestPresentation {
 AndroidAction TestActions {
 	ChangeActivityAction toActTwo {
 		oldActivity = "FirstActivity";
-		// Is this possible? newActivity = act2.name;
 		newActivity = "SecondActivity";
 		data = [passData];
 	}
 
 	ChangeActivityAction toActThree {
-		//newActivity = act3.name;
 		oldActivity = "SecondActivity";
 		newActivity = "ThirdActivity";
 	}

@@ -1,7 +1,5 @@
 load "Application"
-load "components/smsComponent"
-load "components/twitterComponent"
-load "components/facebookComponent"
+load "components/GlueComponents"
 
 // MANIFEST ------------------------------------------------------------------
 
@@ -37,19 +35,16 @@ Manifest TestManifest {
 
 Presentation TestPresentation {
 
-	Layout l {
+	LayoutDesc l1 {
 		name = "main";
-		layoutDesc = ld;
+		layoutType = mainLayout;
 	}
 
-	LayoutDescription ld {
-		type = layoutType;
-		components = [viewNumber, editPhoneNr, viewMessage, editMessage, sendMessage];
-	}
-
-	LayoutType layoutType {
+	LayoutType mainLayout {
 		name = "LinearLayout";
 		orientation = "vertical";
+
+		children = [viewNumber, editPhoneNr, viewMessage, editMessage, sendMessage];
 	}
 
 	TextView viewNumber {
@@ -90,52 +85,18 @@ Presentation TestPresentation {
 
 	Presentation pres {
 		activityname = "SMSMessagingActivity";
-		layout = l;
-	}
-}
-
-// ACTIONS AND DATA ----------------------------------------------------------
-
-AndroidAction TestActions imports TestPresentation {
-	ExtractLayoutAction ela1 {
-		source = editMessage;
-		name = "message";
-	}
-
-	ExtractLayoutAction ela2 {
-		source = editPhoneNr;
-		name = "phoneNr";
-	}
-
-	CallComponentAction cca {
-		properties = [];
-	}
-
-	Data phoneNr {
-		name = "phoneNr";
-		value = "5556";
-		datatype = "String";
-	}
-}
-
-// TRIGGERS ------------------------------------------------------------------
-
-ActionList TestActionList imports TestActions, TestPresentation {
-	ActionList triggerEditMessage {
-		target = sendMessage;
-		// Sequentially specify which actions you want to execute
-		actions = [ela1, ela2, cca];
+		layout = l1;
 	}
 }
 
 // COMPONENTS ----------------------------------------------------------------
 
-Component MyTypeComponents imports smsComponent, twitterComponent, facebookComponent { }
-
-MyTypeComponents myComp imports TestPresentation, TestActionList {
+GlueComponent myComp imports TestPresentation {
 	SMS mySms {
-		layoutcomponents = [editPhoneNr, editMessage, sendMessage];
-		actions = [triggerEditMessage];
+		//layoutcomponents = [editPhoneNr, editMessage, sendMessage];
+		phoneField = editPhoneNr;
+		messageField = editMessage;
+		sendButton = sendMessage;
 	}
 }
 
@@ -144,6 +105,8 @@ MyTypeComponents myComp imports TestPresentation, TestActionList {
 Activity TestActivity imports myComp, TestPresentation {
 	Activity act {
 		name = "SMSMessagingActivity";
+		main = false;
+		
 		content = [mySms];
 		presentation = pres;
 	}

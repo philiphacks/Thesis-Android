@@ -1,6 +1,6 @@
-load "AndroidComponent"
+load "Component"
 
-AndroidComponent geoComponent imports Presentation {
+AndroidComponent geoComponent imports Component {
 	
 	AComp Geo {
 		package = "be.pds.geo";

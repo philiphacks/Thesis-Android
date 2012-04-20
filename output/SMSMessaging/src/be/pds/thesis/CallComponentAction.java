@@ -24,4 +24,5 @@ public class CallComponentAction extends AndroidAction {
 		Log.i(TAG, "[CallComponentAction] executing...");
 		this.component.action(properties);
 	}
+	
 }

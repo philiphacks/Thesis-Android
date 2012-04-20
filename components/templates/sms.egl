@@ -102,6 +102,10 @@ public class SMSComponent extends AndroidComponent {
 		sendSMS(phone, message);
 	}
 
+	public void onMessage(final String message) {
+		//void;
+	}
+
 	private void sendSMS(String phoneNumber, String message) {
 		String SENT = "SMS_SENT";
 		String DELIVERED = "SMS_DELIVERED";

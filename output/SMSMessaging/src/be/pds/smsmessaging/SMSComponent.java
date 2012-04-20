@@ -21,49 +21,48 @@ public class SMSComponent extends AndroidComponent {
 
 	private final String TAG = getClass().getName();
 	private HashMap<String, Object> properties;
-	private EditText editPhoneNr;
-	private EditText editMessage;
-	private Button sendMessage;
+	private String phone;
+	private String message;
+		private EditText editPhoneNr;
+		private EditText editMessage;
+		private Button sendMessage;
 
 	public SMSComponent(Activity a) {
 		super(a);
-		editPhoneNr = (EditText) this.parent.findViewById(R.id.txtPhoneNo);
-		editMessage = (EditText) this.parent.findViewById(R.id.txtMessage);
-		sendMessage = (Button) this.parent.findViewById(R.id.btnSendSMS);
+		properties = new HashMap<String, Object>();
+			editPhoneNr = (EditText) this.parent.findViewById(R.id.txtPhoneNo);
+			editMessage = (EditText) this.parent.findViewById(R.id.txtMessage);
+			sendMessage = (Button) this.parent.findViewById(R.id.btnSendSMS);
+			sendMessage.setOnClickListener(new View.OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					action(properties);
+				}
+			});
 		setupSMS();
 	}
 
-	public EditText geteditPhoneNr() {
-		return editPhoneNr;
-	}
-	public EditText geteditMessage() {
-		return editMessage;
-	}
-	public Button getsendMessage() {
-		return sendMessage;
+
+	private void setupSMS() {
 	}
 
 	public void action(HashMap<String, Object> properties) {
-		Log.i(TAG, "[SMSComponent] sending SMS to " + (String)properties.get("phoneNr"));
-		sendSMS((String)properties.get("phoneNr"), (String)properties.get("message"));
+		Log.i(TAG, "[SMSComponent] sending SMS");
+		if (properties.get("phone") != null) {
+			phone = (String)properties.get("phone");
+		}
+			phone = editPhoneNr.getText().toString();
+
+		if (properties.get("message") != null) {
+			message = (String)properties.get("message");
+		}
+			message = editMessage.getText().toString();
+
+		sendSMS(phone, message);
 	}
 
-	private void setupSMS() {
-		final AndroidComponent myself = this;
-			properties = new HashMap<String, Object>();
-					sendMessage.setOnClickListener(new View.OnClickListener() {
-						
-						@Override
-						public void onClick(View v) {
-									// TODO: make a class out of this?
-									properties.put("message", editMessage.getText().toString());
-									// TODO: make a class out of this?
-									properties.put("phoneNr", editPhoneNr.getText().toString());
-									CallComponentAction cca = new CallComponentAction(properties);
-									cca.setCalledComponent(myself);
-									cca.execute();
-						}
-					});
+	public void onMessage(final String message) {
+		//void;
 	}
 
 	private void sendSMS(String phoneNumber, String message) {

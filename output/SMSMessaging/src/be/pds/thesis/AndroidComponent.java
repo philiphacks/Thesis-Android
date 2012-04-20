@@ -10,6 +10,7 @@ public abstract class AndroidComponent {
 	
 	protected List<AndroidAction> actions;
 	protected Activity parent;
+	private HashMap<String, Object> result;
 
 	public AndroidComponent() {
 		actions = new ArrayList<AndroidAction>();
@@ -24,6 +25,12 @@ public abstract class AndroidComponent {
 		actions.add(a);
 	}
 
+	public Activity getParent() {
+		return this.parent;
+	}
+
 	abstract public void action(HashMap<String, Object> properties);
+	
+	abstract public void onMessage(final String message);
 }
 

@@ -6,44 +6,48 @@
 
 	var s : Template := TemplateFactory.load(basePath+'genServer.egl');
 
-	"Generating server".println();	
-	s.populate('server', app.server);
-	s.populate('basePath',    basePath);
-	s.populate('compPath',    compPath);
-	s.process();
-	s.generate(codePath+'main.js');
+	if (app.server.isDefined() and app.server.size() > 0) {
+		"Generating server".println();	
+		s.populate('server', app.server);
+		s.populate('basePath',    basePath);
+		s.populate('compPath',    compPath);
+		s.process();
+		s.generate(codePath+'main.js');
 
-	s := TemplateFactory.load(compPath+'databaseServer.egl');
-	s.populate('basePath',    basePath);
-	s.populate('compPath',    compPath);
-	s.process();
-	s.generate(codePath+'models.js');
+		s := TemplateFactory.load(compPath+'databaseServer.egl');
+		s.populate('basePath',    basePath);
+		s.populate('compPath',    compPath);
+		s.process();
+		s.generate(codePath+'models.js');
 
-	s := TemplateFactory.load(compPath+'chatServer.egl');
-	s.populate('basePath',    basePath);
-	s.populate('compPath',    compPath);
-	s.process();
-	s.generate(codePath+'chat.js');
+		s := TemplateFactory.load(compPath+'chatServer.egl');
+		s.populate('basePath',    basePath);
+		s.populate('compPath',    compPath);
+		s.process();
+		s.generate(codePath+'chat.js');
 
-	s := TemplateFactory.load(compPath+'dropboxServer.egl');
-	s.populate('basePath',    basePath);
-	s.populate('compPath',    compPath);
-	s.process();
-	s.generate(codePath+'dropbox.js');
+		s := TemplateFactory.load(compPath+'dropboxServer.egl');
+		s.populate('basePath',    basePath);
+		s.populate('compPath',    compPath);
+		s.process();
+		s.generate(codePath+'dropbox.js');
 
-	s := TemplateFactory.load(compPath+'loginServer.egl');
-	s.populate('basePath',    basePath);
-	s.populate('compPath',    compPath);
-	s.populate('session', app.server.session);
-	s.process();
-	s.generate(codePath+'session.js');
+		s := TemplateFactory.load(compPath+'loginServer.egl');
+		s.populate('basePath',    basePath);
+		s.populate('compPath',    compPath);
+		s.populate('session', app.server.session);
+		s.process();
+		s.generate(codePath+'session.js');
 
-	s := TemplateFactory.load(compPath+'noteServer.egl');
-	s.populate('basePath',    basePath);
-	s.populate('compPath',    compPath);
-	s.populate('content', app.server.components);
-	s.process();
-	s.generate(codePath+'note.js');
+		s := TemplateFactory.load(compPath+'noteServer.egl');
+		s.populate('basePath',    basePath);
+		s.populate('compPath',    compPath);
+		s.populate('content', app.server.components);
+		s.process();
+		s.generate(codePath+'note.js');
 
-	"Server generated.".println();
+		"Server generated.".println();
+	} else {
+		"No server configured, skipping...".println();
+	}
 %]

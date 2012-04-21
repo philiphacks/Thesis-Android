@@ -1,0 +1,120 @@
+load "Application"
+load "components/glueComponents"
+
+// MANIFEST ------------------------------------------------------------------
+
+Manifest TestManifest {
+	ManifestDescription manDesc {
+		package = "be.pds.twitter";
+		sdk = "8";
+		app_info = info;
+		permissions = [p3, p4];
+	}
+
+	AppInfo info {
+		activities = [a1];
+	}
+
+	Permission p3 {
+		name = "android.permission.ACCESS_FINE_LOCATION";
+	}
+
+	Permission p4 {
+		name = "android.permission.INTERNET";
+	}
+
+	Activity a1 {
+		name = ".TwitterActivity";
+		intent = i;
+	}
+
+	IntentFilter i { }
+}
+
+// PRESENTATION --------------------------------------------------------------
+
+Presentation TestPresentation {
+
+	LayoutDesc l1 {
+		name = "main";
+		layoutType = mainType;
+	}
+
+	LayoutType mainType {
+		name = "LinearLayout";
+		orientation = "vertical";
+
+		children = [tweetInfo, tweetText, sendTweet];
+	}
+
+	TextView tweetInfo {
+		layoutID = "tweetInfo";
+		width = "fill_parent";
+		height = "wrap_content";
+		text = "Enter a tweet";
+	}
+
+	EditText tweetText {
+		layoutID = "tweetText";
+		width = "fill_parent";
+		height = "wrap_content";
+		text = "";
+	}
+
+	Button sendTweet {
+		layoutID = "sendTweet";
+		width = "fill_parent";
+		height = "wrap_content";
+		text = "Send Tweet";
+	}
+
+	Presentation pres {
+		activityname = "TwitterActivity";
+		layout = l1;
+	}
+}
+
+// ACTIONS AND DATA -----------------------------------------------------------
+
+AndroidAction TestActions {
+	CallComponentAction cca { 
+		properties = [];
+	}
+}
+
+// COMPONENTS ----------------------------------------------------------------
+
+GlueComponent myComp imports TestPresentation, TestActions {
+	Geo myGeo {
+		layoutcomponents = [];
+	}
+
+	Twitter myTwitter {
+		layoutcomponents = [tweetInfo, tweetText, sendTweet];
+
+		inputField = tweetText;
+		sendButton = sendTweet;
+	}
+
+	Trigger t1(myTwitter, myGeo) {
+		actions = [cca];
+	}
+}
+
+Activity TestActivity imports myComp, TestPresentation {
+	Activity act1 {
+		name = "TwitterActivity";
+		main = false;
+		
+		content = [myTwitter];
+		presentation = pres;
+	}
+}
+
+// APPLICATION ----------------------------------------------------------------
+
+Application myApp imports myComp, TestManifest, TestActivity {
+	name = "TwitterAndroid";
+	manifest = manDesc;
+	activities = [act1];
+}

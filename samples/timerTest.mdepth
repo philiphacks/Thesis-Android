@@ -31,19 +31,16 @@ Manifest TestManifest {
 
 Presentation TestPresentation {
 
-	Layout l {
+	LayoutDesc l1 {
 		name = "main";
-		layoutDesc = ld;
+		type = mainType;
 	}
 
-	LayoutDescription ld {
-		type = layoutType;
-		components = [actInfo];
-	}
-
-	LayoutType layoutType {
+	LayoutType mainType {
 		name = "LinearLayout";
 		orientation = "vertical";
+
+		children = [actInfo];
 	}
 
 	TextView actInfo {
@@ -55,7 +52,7 @@ Presentation TestPresentation {
 
 	Presentation pres {
 		activityname = "TimerActivity";
-		layout = l;
+		layout = l1;
 	}
 }
 
@@ -76,7 +73,6 @@ AndroidAction TestActions {
 GlueComponent myComp imports TestPresentation, TestActions {
 	Geo myGeo {
 		layoutcomponents = [];
-		callback = "useNewLocation";
 	}
 
 	Timer myTimer {

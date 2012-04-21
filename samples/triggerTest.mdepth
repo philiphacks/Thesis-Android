@@ -1,6 +1,5 @@
 load "Application"
-load "components/smsComponent"
-load "components/geoComponent"
+load "components/glueComponents"
 
 // MANIFEST ------------------------------------------------------------------
 
@@ -40,19 +39,16 @@ Manifest TestManifest {
 
 Presentation TestPresentation {
 
-	Layout l {
+	LayoutDesc l1 {
 		name = "main";
-		layoutDesc = ld;
+		layoutType = mainType;
 	}
 
-	LayoutDescription ld {
-		type = layoutType;
-		components = [viewNumber, editPhoneNr, viewMessage, editMessage, sendMessage];
-	}
-
-	LayoutType layoutType {
+	LayoutType mainType {
 		name = "LinearLayout";
 		orientation = "vertical";
+
+		children = [viewNumber, editPhoneNr, viewMessage, editMessage, sendMessage];
 	}
 
 	TextView viewNumber {
@@ -93,7 +89,7 @@ Presentation TestPresentation {
 
 	Presentation pres {
 		activityname = "GeoSMSActivity";
-		layout = l;
+		layout = l1;
 	}
 }
 
@@ -101,34 +97,22 @@ Presentation TestPresentation {
 
 AndroidAction TestActions {
 	CallComponentAction cca { 
-		properties = [phoneNr, message];
-	}
-
-	Data phoneNr {
-		name = "phoneNr";
-		value = "5664";
-		datatype = "String";
-	}
-
-	Data message {
-		name = "message";
-		value = "Default message";
-		datatype = "String";
+		properties = [];
 	}
 }
 
 // COMPONENTS -----------------------------------------------------------------
 
-AndroidComponent MyTypeComponents imports smsComponent, geoComponent { }
-
-MyTypeComponents myComp imports TestPresentation, TestActions {
+GlueComponent myComp imports TestPresentation, TestActions {
 	SMS mySms {
-		layoutcomponents = [editPhoneNr, editMessage, sendMessage];
+		phone = "5556";
+		phoneField = editPhoneNr;
+		messageField = editMessage;
+		sendButton = sendMessage;
 	}
 
 	Geo myGeo {
 		layoutcomponents = [];
-		callback = "useNewLocation";
 	}
 
 	Trigger t1(mySms, myGeo) {
@@ -141,6 +125,8 @@ MyTypeComponents myComp imports TestPresentation, TestActions {
 Activity TestActivity imports myComp, TestPresentation {
 	Activity act {
 		name = "GeoSMSActivity";
+		main = false;
+
 		content = [mySms, myGeo];
 		presentation = pres;
 	}

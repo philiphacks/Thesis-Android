@@ -5,12 +5,12 @@
 	android:layout_height="fill_parent"
 	>
 
-		<TextView
-			android:id="@+id/showText"
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
-			android:text="Trying to get information on location (51.134083, 5.019743)"
-			android:gravity=""
-		/>
+			<TextView
+				android:id="@+id/showText"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:text="Trying to get information on location (51.134083, 5.019743)"
+				android:gravity=""
+			/>
 	
 </LinearLayout>

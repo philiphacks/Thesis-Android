@@ -5,26 +5,26 @@
 	android:layout_height="fill_parent"
 	>
 
-		<TextView
-			android:id="@+id/tweetInfo"
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
-			android:text="Enter a tweet"
-			android:gravity=""
-		/>
-		<EditText
-			android:id="@+id/tweetText"
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
-			android:text=""
-			android:gravity=""
-		/>
-		<Button
-			android:id="@+id/sendTweet"
-			android:layout_width="fill_parent"
-			android:layout_height="wrap_content"
-			android:text="Send Tweet"
-			android:gravity=""
-		/>
+			<TextView
+				android:id="@+id/tweetInfo"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:text="Enter a tweet"
+				android:gravity=""
+			/>
+			<EditText
+				android:id="@+id/tweetText"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:text=""
+				android:gravity=""
+			/>
+			<Button
+				android:id="@+id/sendTweet"
+				android:layout_width="fill_parent"
+				android:layout_height="wrap_content"
+				android:text="Send Tweet"
+				android:gravity=""
+			/>
 	
 </LinearLayout>

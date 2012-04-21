@@ -36,6 +36,13 @@ public class SMSComponent extends AndroidComponent {
 	[% for (c in component.layoutcomponents) { %]
 	private [%= c.type %] [%= c %];
 	[% } %]
+	[% if (component.trigger.isDefined()) { %]
+	private AndroidComponent isTriggerOf;
+
+	public void isTriggerOf(AndroidComponent comp) {
+		this.isTriggerOf = comp;
+	}
+	[% } %]
 	[% if (component.isTriggerOf.isDefined()) { %]
 	private AndroidComponent trigger;
 
@@ -83,23 +90,41 @@ public class SMSComponent extends AndroidComponent {
 	    [% } %]
 	}
 
-	public void action(HashMap<String, Object> properties) {
+	public void action(HashMap<String, Object> props) {
 		Log.i(TAG, "[SMSComponent] sending SMS");
 		if (properties.get("phone") != null) {
 			phone = (String)properties.get("phone");
 		}
+		if (props.get("phone") != null) {
+			phone = (String)props.get("phone");
+		}
 		[% if (component.phoneField.isDefined() and component.phoneField.size() > 0) { %]
-			phone = [%= component.phoneField %].getText().toString();
+			String p = [%= component.phoneField %].getText().toString();
+			if (!p.equals("")) {
+				phone = p;
+			}
 		[% } %]
 
 		if (properties.get("message") != null) {
 			message = (String)properties.get("message");
 		}
+		if (props.get("message") != null) {
+			message = (String)props.get("message");
+			Log.i(TAG, "Found message '" + message + "'.");
+		}
 		[% if (component.messageField.isDefined() and component.messageField.size() > 0) { %]
-			message = [%= component.messageField %].getText().toString();
+			String m = [%= component.messageField %].getText().toString();
+			if (!m.equals("")) {
+				message = m;
+			}
 		[% } %]
 
-		sendSMS(phone, message);
+		if (!phone.equals("") && !message.equals("")) {
+			Log.i(TAG, "Sending SMS to " + phone + " with message '" + message + "'.");
+			sendSMS(phone, message);
+		} else {
+			Toast.makeText(this.parent.getBaseContext(), "SMS not delivered. Please specify a phone number and a message", Toast.LENGTH_SHORT).show();
+		}
 	}
 
 	public void onMessage(final String message) {

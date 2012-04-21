@@ -26,11 +26,18 @@ public class FoursquareComponent extends AndroidComponent {
 	private final String API_URL = "https://api.foursquare.com/v2";
 	private final String VENUE_CATEGORY = "/venues/search";
 	private final String OAUTH_TOKEN = "oauth_token=ZR14WJ2YK3FPF2MXGWN5UYKF4HH0U0TZLWXKVZA0RDXKAV0K";
-	[% if (component.isTriggerOf.isDefined()) { %]
+	[% if (component.trigger.isDefined()) { %]
 	private AndroidComponent isTriggerOf;
 
 	public void isTriggerOf(AndroidComponent comp) {
 		this.isTriggerOf = comp;
+	}
+	[% } %]
+	[% if (component.isTriggerOf.isDefined()) { %]
+	private AndroidComponent trigger;
+
+	public void setTrigger(AndroidComponent comp) {
+		this.trigger = comp;
 	}
 	[% } %]
 	
@@ -102,5 +109,9 @@ public class FoursquareComponent extends AndroidComponent {
 		}
 		
 		return "";
+	}
+
+	public void onMessage(final String message) {
+		//void;
 	}
 }

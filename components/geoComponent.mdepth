@@ -7,7 +7,6 @@ AndroidComponent geoComponent imports Component {
 		gencodetemplate = "geo.egl";
 		ctype = "geo";
 
-		callback : String;
 		location : String;
 	}
 

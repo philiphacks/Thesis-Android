@@ -1,6 +1,5 @@
 load "Application"
-load "components/foursquareComponent"
-load "components/geoComponent"
+load "components/glueComponents"
 
 // MANIFEST ------------------------------------------------------------------
 
@@ -36,19 +35,16 @@ Manifest TestManifest {
 
 Presentation TestPresentation {
 
-	Layout l {
+	LayoutDesc l1 {
 		name = "main";
-		layoutDesc = ld;
+		layoutType = mainType;
 	}
 
-	LayoutDescription ld {
-		type = layoutType;
-		components = [showText];
-	}
-
-	LayoutType layoutType {
+	LayoutType mainType {
 		name = "LinearLayout";
 		orientation = "vertical";
+
+		children = [showText];
 	}
 
 	TextView showText {
@@ -60,7 +56,7 @@ Presentation TestPresentation {
 
 	Presentation pres {
 		activityname = "GeoSMSActivity";
-		layout = l;
+		layout = l1;
 	}
 }
 
@@ -68,24 +64,17 @@ Presentation TestPresentation {
 
 AndroidAction TestActions {
 	CallComponentAction cca { 
-		properties = [location];
+		properties = [];
 	}
 
-	Data location {
-		name = "location";
-		value = "51.134083, 5.019743";
-		datatype = "String";
-	}
 }
 
 // COMPONENTS -----------------------------------------------------------------
 
-AndroidComponent MyTypeComponents imports foursquareComponent, geoComponent { }
-
-MyTypeComponents myComp imports TestPresentation, TestActions {
+GlueComponent myComp imports TestPresentation, TestActions {
 	Geo myGeo {
 		layoutcomponents = [];
-		callback = "useNewLocation";
+		location = "51.134083, 5.019743";
 	}
 
 	Foursquare my4sq {
@@ -102,6 +91,7 @@ MyTypeComponents myComp imports TestPresentation, TestActions {
 Activity TestActivity imports myComp, TestPresentation {
 	Activity act {
 		name = "FoursquareActivity";
+		
 		content = [myGeo, my4sq];
 		presentation = pres;
 	}

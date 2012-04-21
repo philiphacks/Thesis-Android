@@ -40,7 +40,7 @@ public class [%= activity.name %] extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        [% if (activity.main) { %]
+        [% if (activity.main.isDefined() and activity.main) { %]
         ServerConnection.getInstance().setHost("[%= server.host %]");
         ServerConnection.getInstance().setPort("[%= server.port %]");
         ServerConnection.getInstance().connect();
@@ -71,6 +71,7 @@ public class [%= activity.name %] extends Activity {
 		[% } %]
 
     	[% if (Trigger.isDefined()) { %]
+    		[% "Setting triggers".println(); %]
 	    	[% for (t in Trigger.all) { %]
 				[%= t.trigger %].setTrigger([%= t.isTriggerOf %]);
 				[%= t.isTriggerOf %].isTriggerOf([%= t.trigger %]);

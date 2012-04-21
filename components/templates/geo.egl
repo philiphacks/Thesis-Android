@@ -66,9 +66,7 @@ public class GeoComponent extends AndroidComponent {
 			@Override
 			public void onLocationChanged(Location location) {
 				// Called when a new location is found by the network location provider.
-				[% if (component.callback.isDefined()) { %]
-				[%= component.callback %](location);
-				[% } %]
+				useNewLocation(location);
 			}
 
 			@Override
@@ -88,20 +86,24 @@ public class GeoComponent extends AndroidComponent {
 		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
 		// the second is the minimum time interval between notifications
 		// the third is the minimum change in distance between notifications
+		Log.i(TAG, "Location listener set.");
 	}
 
-	private void [%= component.callback %](Location loc) {
+	private void useNewLocation(Location loc) {
 		this.location = loc;
 		String locString = "I am at location (" + loc.getLongitude() + ", " + loc.getLatitude() + ")";
 		Log.i(TAG, locString);
 		for (AndroidAction a : actions) {
 			if (a instanceof CallComponentAction) {
 				a.setProperty("location", loc);
-				[% if (component.trigger.isDefined()) { %]
-				((CallComponentAction)a).setCalledComponent(this.isTriggerOf);
+				a.setProperty("message", locString);
+				[% if (component.isTriggerOf.isDefined()) { %]
+				((CallComponentAction)a).setCalledComponent(this.trigger);
 				[% } %]
 			}
 			a.execute();	
 		}
 	}
+
+	public void onMessage(String message) { }
 }

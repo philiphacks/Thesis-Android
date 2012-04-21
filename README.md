@@ -14,7 +14,7 @@ This modeling framework uses the [MetaDepth](http://astreo.ii.uam.es/~jlara/meta
 
 The chat, dropbox, list and login components can communicate with a server written in [Node.js](http://www.nodejs.org/). Both the components and the server can be modeled, after which an Android client and a Node.js server implementation will be generated.
 
-# Requirements
+## Requirements
 
 You can download the modeling framework from this Github repository. Dependencies:
 
@@ -23,7 +23,7 @@ You can download the modeling framework from this Github repository. Dependencie
 * [Android SDK 8](http://developer.android.com/index.html)
 * [Metadepth](http://astreo.ii.uam.es/~jlara/metaDepth/)
 
-# Getting started
+## Getting started
 
 In the samples directory, you can find several example models that will generate working Android applications.
 To initiate Metadepth, use the following script
@@ -39,7 +39,7 @@ quit
 
 The variable DIR, the samples file and the context have to be set manually depending on the example that should be generated.
 
-# Contributors
+## Contributors
 
 * [Philip De Smedt](http://www.github.com/philipdesmedt) (author of the modeling framework)
 * [Juan de Lara](http://www.ii.uam.es/~jlara) (author of Metadepth)

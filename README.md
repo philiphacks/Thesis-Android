@@ -42,7 +42,7 @@ The variable DIR, the samples file and the context have to be set manually depen
 ## Contributors
 
 * [Philip De Smedt](http://www.github.com/philipdesmedt) (author of the modeling framework)
-* [Juan de Lara](http://www.ii.uam.es/~jlara) (author of Metadepth)
+* [Juan de Lara](http://www.ii.uam.es/~jlara) (author of Metadepth and co-promotor of my thesis)
 * [Esther Guerra](http://www.ii.uam.es/~eguerra) (author of Metadepth)
 
 * [Hans Vangheluwe](http://msdl.cs.mcgill.ca/people/hv/) (promotor of my thesis)

@@ -37,6 +37,12 @@ load EGL "templates/egl/codeGen.egl"
 quit
 ```
 
+and execute 
+
+```
+java -jar metaDepth.jar < script
+```
+
 The variable DIR, the samples file and the context have to be set manually depending on the example that should be generated.
 
 ## Contributors

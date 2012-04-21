@@ -19,9 +19,25 @@ The chat, dropbox, list and login components can communicate with a server writt
 You can download the modeling framework from this Github repository. Dependencies:
 
 * [Node.js](http://www.nodejs.org/)
+* [Java JDK](http://www.oracle.com/technetwork/java/javase/downloads/index.html)
 * [Android SDK 8](http://developer.android.com/index.html)
 * [Metadepth](http://astreo.ii.uam.es/~jlara/metaDepth/)
 
+# Getting started
+
+In the samples directory, you can find several example models that will generate working Android applications.
+To initiate Metadepth, use the following script
+
+```
+set DIR "collaborative/"
+load "samples/collaborative"
+context myApp
+load EGL "templates/egl/codeGenServer.egl"
+load EGL "templates/egl/codeGen.egl"
+quit
+```
+
+The variable DIR, the samples file and the context have to be set manually depending on the example that should be generated.
 
 # Contributors
 

@@ -88,10 +88,22 @@ server.on('connection', function (socket) {
 							} else if (msg.authed) {
 								console.log('Sending new authed message');
 								var user = connections[i].user;
-								connections[i]['connection'].send('{ "message" : { "type" : "authed", "user" : "' + user + '" } }');
+								var role = connections[i].role;
+								connections[i]['connection'].send('{ "message" : { "type" : "authed", "user" : "' + user + '", "role" : "' + role + '" } }');
+							} else if (msg.auth) {
+								console.log('Sending new authed message');
+								var user = connections[i].user;
+								connections[i]['connection'].send('{ "message" : { "type" : "authed", "user" : "' + user + '", "role" : "' + role + '" } }');
 							} else if (msg.quit) {
 								console.log('Disabling socket connection');
 								connections[i]['enabled'] = 'false'
+								var logout = {};
+								logout['message'] = {};
+								logout['message']['type'] = 'logout';
+								logout['message']['user'] = connections[i]['user'];
+								for (var i = connections.length - 1; i >= 0; i--) {
+									connections[i]['connection'].send(JSON.stringify(logout))
+								}
 							} else {
 								connections[i]['connection'].send('{ "message" : { "type" : "error" } }');
 							}

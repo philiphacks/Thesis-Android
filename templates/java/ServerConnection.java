@@ -21,6 +21,7 @@ public class ServerConnection {
 	private static final String DROPBOX_NOTE = "dropbox";
 	private static final String AUTH_MESSAGE = "authed";
 	private static final String SESSION_MESSAGE = "users";
+	private static final String LOGOUT_MESSAGE = "logout";
 	private static final String ERROR_MESSAGE = "error";
 	private static final String GENERIC_CHILD_MESSAGE = "genchild";
 	private final Semaphore available = new Semaphore(1, true);
@@ -76,6 +77,7 @@ public class ServerConnection {
 						Log.i(TAG, "Parsing auth message.");
 						String role = m.getMessage().getRole();
 						if (role != null && role.equals("admin")) {
+							Log.i(TAG, "User is an admin!");
 							r = Role.ADMIN;
 						}
 						user = new User(m.getMessage().getUser(), r);
@@ -94,7 +96,13 @@ public class ServerConnection {
 						Log.i(TAG, "Got new session info");
 						MainActivity comp = (MainActivity) components.get(type);
 						if (comp != null) {
-							comp.setConnectedUsers(m.getMessage().getMessage() + "\n");
+							comp.addConnectedUser(new User(m.getMessage().getMessage()));
+						}
+					} else if (type.equals(LOGOUT_MESSAGE)) {
+						Log.i(TAG, "Got new session info about leaving user");
+						MainActivity comp = (MainActivity) components.get(SESSION_MESSAGE);
+						if (comp != null) {
+							comp.remConnectedUser(new User(m.getMessage().getUser()));
 						}
 					} else if (type.equals(ERROR_MESSAGE)) {
 						Log.i(TAG, "Got new error message");
@@ -133,8 +141,8 @@ public class ServerConnection {
 
 				public void onError(Exception ex) {
 					ServerConnection.connected = false;
-					Log.i(TAG, "Connection refused.. Got error");
-					//ex.printStackTrace();
+					Log.i(TAG, "Connection refused.. Got error: " + ex.getMessage());
+					ex.printStackTrace();
 				}
 			};
 

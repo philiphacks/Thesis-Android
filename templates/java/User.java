@@ -15,6 +15,10 @@ public class User {
 		this.role = r;
 	}
 	
+	public User(String u) {
+		this.username = u;
+	}
+	
 	public String getUser() {
 		return this.username;
 	}

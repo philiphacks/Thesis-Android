@@ -91,8 +91,21 @@ public class LoginComponent extends AndroidComponent {
 				[% } %]
 			[% } %]
 		[% } %]
+
+		Bundle extras = parent.getIntent().getExtras();
+		if(extras !=null) {
+			boolean value = extras.getBoolean("DROPBOX");
+			if (value) {
+				showToast("Dropbox connected succesfully! Please log in again.");
+			}
+		}
 	}
 
+	private void showToast(String msg) {
+    	Toast error = Toast.makeText(this.parent, msg, Toast.LENGTH_LONG);
+    	error.show();
+    }
+    
 	public void action(HashMap<String, Object> properties) {
 		[% if (component.actions.isDefined() and component.actions.size() > 0) { %]
 			[% for (a in component.actions) { %]

@@ -3,7 +3,7 @@ var app = require('./main');
 var notes = [];
 var n = {};
 [% for (c in content) { %]
-	[% if (c.items.isDefined() and c.items.size() > 0) { %]
+	[% if (c.ctype == "list" and c.items.isDefined() and c.items.size() > 0) { %]
 		[% for (i in c.items) { %]
 			n['type'] = "[%= i.type %]";
 			n['parent'] = "null";

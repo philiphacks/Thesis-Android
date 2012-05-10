@@ -127,6 +127,7 @@ public class [%= activity.name %] extends Activity {
 		[% } %]
 
 		[% if (activity.userView.isDefined() and activity.userView.size() > 0) { %]
+			connectedUsers = new ArrayList<User>();
 			ServerConnection.getInstance().addComponent("users", this);
 			connectedUsersView = (TextView) this.findViewById(R.id.connectedUsers);
 			ServerConnection.getInstance().getConnectedUsers();
@@ -137,12 +138,42 @@ public class [%= activity.name %] extends Activity {
     public void setConnectedUsers(final String message) {
     	runOnUiThread(new Runnable() {
 			public void run() {
-				String output = connectedUsersView.getText().toString();
-				output += message;
-				connectedUsersView.setText(output);
+				//String output = connectedUsersView.getText().toString();
+				//output += message;
+				connectedUsersView.setText(message);
 			}
 		});
     }
+
+    @Override
+	public void addConnectedUser(User u) {
+		Log.i(TAG, "Adding new connected user " + u.getUser());
+		connectedUsers.add(u);
+		String connected = "";
+		for (User user : connectedUsers) {
+			connected += user.getUser() + "\n";
+		}
+		setConnectedUsers(connected);
+	}
+
+	@Override
+	public void remConnectedUser(User u) {
+		String connected = "";
+		for (int i = 0; i < connectedUsers.size(); i++) {
+			User user = connectedUsers.get(i);
+			if (user.getUser().equals(u.getUser())) {
+				Log.i(TAG, "Removing connected user " + u.getUser());
+				if (connectedUsers.remove(i) != null) {
+					Log.i(TAG, "Removed user successfully!");
+				} else {
+					Log.i(TAG, "Could not remove user.");
+				}
+			} else {
+				connected += user.getUser() + "\n";
+			}
+		}
+		setConnectedUsers(connected);
+	}
     [% } %]
 
     private void showToast(String msg) {
@@ -171,7 +202,15 @@ public class [%= activity.name %] extends Activity {
 
 	    				TokenPair tokens = session.getAccessTokenPair();
 	    				dropbox.storeKeys(tokens.key, tokens.secret);
-	    				dropbox.setLoggedIn(true);
+	    				
+	    				if (!dropbox.isLoggedIn()) {
+	    					dropbox.setLoggedIn(true);
+	    					ServerConnection.getInstance().quit();
+	    					Intent myIntent = new Intent(this.getBaseContext(), LoginActivity.class);
+	    					myIntent.putExtra("DROPBOX", true);
+	    					startActivityForResult(myIntent, 0);
+	    					this.finish();
+	    				}
 	    			} catch (IllegalStateException e) {
 	    				showToast("Couldn't authenticate with Dropbox:" + e.getLocalizedMessage());
 	    				Log.i(TAG, "Error authenticating", e);

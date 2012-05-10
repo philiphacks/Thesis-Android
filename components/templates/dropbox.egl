@@ -223,6 +223,10 @@ public class DropboxComponent extends AndroidComponent {
 		}
 	}
 	
+	public boolean isLoggedIn() {
+		return loggedIn;
+	}
+	
     /**
      * Shows keeping the access keys returned from Trusted Authenticator in a local
      * store, rather than storing user name & password, and re-authenticating each

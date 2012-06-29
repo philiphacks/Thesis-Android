@@ -64,11 +64,11 @@ public class ServerConnection {
 
 				public void onMessage(String message) {
 					// Parse message (JSON) and execute command
+					Log.i(TAG, "GOT MESSAGE: " + message);
 					JsonObj m = new Gson().fromJson(message, JsonObj.class);
 					if (m == null) {
 						return;
 					}
-					Log.i(TAG, "GOT MESSAGE: " + message);
 					String type = m.getMessage().getType();
 					
 					if (type.equals(AUTH_MESSAGE)) {

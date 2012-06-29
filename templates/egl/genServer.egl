@@ -146,3 +146,8 @@ function enableConnection(c, connections, info, error) {
 		session.newConnectedUser(connections, c);
 	}
 }
+
+if (process.argv[2] === 'init') {
+	console.log('Initializing notes into MongoDB');
+	note.initNotes();
+}

@@ -1,0 +1,209 @@
+load "Application"
+load "Server"
+load "ServerProperty"
+load "Template"
+load "components/GlueComponents"
+
+// MANIFEST ------------------------------------------------------------------
+
+Manifest TestManifest {
+	ManifestDescription manDesc {
+		package = "be.pds.questionnaire";
+		sdk = "8";
+		app_info = info;
+		permissions = [p1];
+	}
+
+	AppInfo info {
+		activities = [a1, a2, a3];
+	}
+
+	Activity a1 {
+		name = ".LoginActivity";
+		intent = i;
+	}
+
+	Activity a2 {
+		name = ".MainActivity";
+	}
+
+	Activity a3 {
+		name = ".MainChildActivity";
+	}
+
+	Permission p1 {
+		name = "android.permission.INTERNET";
+	}
+
+	IntentFilter i { }
+}
+
+// PRESENTATION --------------------------------------------------------------
+
+Presentation TestPresentation imports LoginLayout, GenericListLayout {
+
+	LayoutDesc l1 {
+		name = "login";
+		layoutType = loginLayout;
+	}
+
+	LayoutDesc l2 {
+		name = "main";
+		layoutType = listLayout;
+	}
+
+	LayoutDesc l3 {
+		name = "item";
+		layoutType = listItemLayout;
+	}
+
+	// PRESENTATIONS ------------------------------------------------------------
+
+	Presentation pres1 {
+		activityname = "LoginActivity";
+		layout = l1;
+	}
+
+	Presentation pres2 {
+		activityname = "MainActivity";
+		layout = l2;
+	}
+
+	Presentation pres3 {
+		activityname = "MainChildActivity";
+		layout = l3;
+	}
+}
+
+// ACTIONS AND DATA -----------------------------------------------------------
+
+AndroidAction LayoutActions {
+	LoginProperty lp {
+		return = false;	
+	}
+
+	CheckServerProperty csp {
+		property = lp;
+	}
+
+	ChangeActivityAction toMainAct {
+		oldActivity = "LoginActivity";
+		newActivity = "MainActivity";
+		condition = [csp];
+	}
+
+	CallComponentAction cca {
+		properties = [];
+	}
+}
+
+AndroidAction LoginActions imports TestPresentation {
+	ExtractLayoutAction ela1 {
+		source = usernameText;
+		name = "username";
+	}
+
+	ExtractLayoutAction ela2 {
+		source = passwordText;
+		name = "password";
+	}
+}
+
+UIAction TestUIActions imports LayoutActions, TestPresentation {
+	OnClickListener triggerLogin {
+		target = loginButton;
+		// Sequentially specify which actions you want to execute
+		actions = [cca, toMainAct];
+	}
+}
+
+// COMPONENTS -----------------------------------------------------------------
+
+GlueComponent myComp imports LoginActions, TestUIActions {
+	Login login {
+		host = "10.0.2.2";
+		port = "3000";
+
+		layoutcomponents = [usernameView, usernameText, passwordView, passwordText, loginButton];
+		actions = [ela1, ela2];
+		uiactions = [triggerLogin];
+	}
+
+	List List1 {
+		childActivity = "MainChildActivity";
+		items = [Item1, Item2];
+	}
+	ListItem Item1 {
+		text = "How much is 10 plus 2?";
+		type = "MainActivity";
+	}
+	ListItem Item2 {
+		text = "Hello";
+		type = "MainActivity";
+	}
+}
+
+// SERVER ---------------------------------------------------------------------
+
+Session mySession {
+	SessionObject sessionObj {
+		users = [User1, User2];
+	}
+
+	User User1 {
+		username = "phil";
+		password = "foobar";
+		role =  user ;
+	}
+	User User2 {
+		username = "juan";
+		password = "foobar";
+		role =  user ;
+	}
+
+	AdminRole admin { }
+	UserRole user { }
+}
+
+Server myServer imports mySession, myComp {
+	Server s {
+		name = "myServer";
+		components = [List1];
+		host = "10.0.2.2";
+		port = "3000";
+
+		session = sessionObj;
+	}
+
+	ListActivity la { }
+}
+
+// ACTIVITIES -----------------------------------------------------------------
+
+Activity TestActivity imports myComp, TestPresentation, TestUIActions, LoginActions, myServer {
+	Activity act1 {
+		name = "LoginActivity";
+		main = true;
+
+		content = [login];
+		presentation = pres1;
+	}
+
+	GenericActivity act2 {
+		name = "MainActivity";
+		main = false;
+
+		content = [List1];
+		presentation = pres2;
+		registerToServer = la;
+	}
+}
+
+// APPLICATION ----------------------------------------------------------------
+
+Application myApp imports TestManifest, TestActivity, myServer {
+	name = "questionnaire";
+	manifest = manDesc;
+	activities = [act1, act2];
+	server = s;
+}
